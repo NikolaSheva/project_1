@@ -2,5 +2,5 @@
   "SECRET_KEY": "django-insecure-s9sj@ft0!sjl*+dv0a6b$x*x1lhl1&rjh&t!j7zhm*=d52wt^j",
   "DEBUG": "False",
   "ALLOWED_HOSTS": ".railway.app,web-production-2dc9c.up.railway.app,localhost,127.0.0.1",
-  "DATABASE_URL": "postgresql://postgres:BaprZYnsndLPvNjzZRWuKfwUPZGNjIpa@postgres.railway.internal:5432/railway"
+  "DATABASE_URL" : "postgresql://postgres:ntzWvxhlDRGFjNmDQLzWaiYGOqSCKDfG@shinkansen.proxy.rlwy.net:24090/railway"
 }
