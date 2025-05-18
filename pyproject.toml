@@ -1,0 +1,41 @@
+[project]
+name = "project-1"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiodns>=3.4.0",
+    "aiohttp>=3.11.18",
+    "asgiref>=3.8.1",
+    "asyncio>=3.4.3",
+    "beautifulsoup4>=4.13.4",
+    "cloudscraper>=1.2.71",
+    "crispy-bootstrap5>=2025.4",
+    "dj-database-url>=2.3.0",
+    "django>=5.2",
+    "django-crispy-forms>=2.4",
+    "django-debug-toolbar>=5.2.0",
+    "django-environ>=0.12.0",
+    "django-extensions>=4.1",
+    "djangorestframework",
+    "dotenv>=0.9.9",
+    "environ>=1.0",
+    "fake-useragent",
+    "gunicorn>=23.0.0",
+    "logging>=0.4.9.6",
+    "loguru>=0.7.3",
+    "lxml>=5.4.0",
+    "pandas>=2.2.3",
+    "pipx>=1.7.1",
+    "plotly>=6.0.1",
+    "psycopg2>=2.9.10",
+    "psycopg2-binary>=2.9.10",
+    "python-decouple>=3.8",
+    "requests>=2.32.3",
+    "sentry-sdk>=2.28.0",
+    "tqdm>=4.67.1",
+    "urllib3>=2.4.0",
+    "uvicorn>=0.34.2",
+    "whitenoise[brotli]>=6.9.0",
+]

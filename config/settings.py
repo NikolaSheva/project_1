@@ -119,6 +119,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #         ssl_require=not DEBUG  # SSL для production
 #     )
 # }
+
 DATABASES = {
     'default': dj_database_url.config(
         default=env('DATABASE_URL'),
@@ -216,5 +217,5 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
 
 
-CSRF_TRUSTED_ORIGINS = ['https://web-production-2dc9c.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://project1-production-32c3.up.railway.app']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
