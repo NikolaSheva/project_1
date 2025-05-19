@@ -91,15 +91,11 @@ multidict==6.4.3
     #   yarl
 narwhals==1.39.0
     # via plotly
-numpy==2.2.5
-    # via pandas
 packaging==25.0
     # via
     #   gunicorn
     #   pipx
     #   plotly
-pandas==2.2.3
-    # via project-1 (pyproject.toml)
 pipx==1.7.1
     # via project-1 (pyproject.toml)
 platformdirs==4.3.6
@@ -120,14 +116,10 @@ pycparser==2.22
     # via cffi
 pyparsing==3.2.3
     # via cloudscraper
-python-dateutil==2.9.0.post0
-    # via pandas
 python-decouple==3.8
     # via project-1 (pyproject.toml)
 python-dotenv==1.1.0
     # via dotenv
-pytz==2025.2
-    # via pandas
 requests==2.32.3
     # via
     #   project-1 (pyproject.toml)
@@ -137,8 +129,6 @@ requests-toolbelt==1.0.0
     # via cloudscraper
 sentry-sdk==2.28.0
     # via project-1 (pyproject.toml)
-six==1.17.0
-    # via python-dateutil
 soupsieve==2.7
     # via beautifulsoup4
 sqlparse==0.5.3
@@ -151,8 +141,6 @@ typing-extensions==4.12.2
     # via
     #   beautifulsoup4
     #   dj-database-url
-tzdata==2025.2
-    # via pandas
 urllib3==2.4.0
     # via
     #   project-1 (pyproject.toml)
