@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(
     DEBUG=(bool, False)
 )
-environ.Env.read_env(BASE_DIR / ".env")  # <-- важно
+# environ.Env.read_env(BASE_DIR / ".env")  # <-- важно
 TEMPLATE_DIR = BASE_DIR / 'templates'
 
 # На это (с fallback значениями):
@@ -112,20 +112,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #     }
 
 # Replace the SQLite DATABASES configuration with PostgreSQL:
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default=os.getenv('DATABASE_URL'),  # Чтение из переменной Railway
-#         conn_max_age=600,
-#         ssl_require=not DEBUG  # SSL для production
-#     )
-# }
-
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
+        default=os.getenv('DATABASE_URL'),  # Чтение из переменной Railway
         conn_max_age=600,
-        conn_health_checks=True,
-        ssl_require=not DEBUG
+        ssl_require=not DEBUG  # SSL для production
     )
 }
 # DATABASE_URL = env("DATABASE_URL")
