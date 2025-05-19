@@ -27,7 +27,7 @@ TEMPLATE_DIR = BASE_DIR / 'templates'
 # SECRET_KEY = os.getenv('SECRET_KEY', 'dummy-key-for-dev-only')
 # DEBUG = os.getenv('DEBUG', 'False') == 'True'
 # ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
-print("DATABASE_URL:", os.getenv("DATABASE_URL"))
+# print("DATABASE_URL:", os.getenv("DATABASE_URL"))
 # Security settings
 SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = env.bool("DEBUG", default=False)
