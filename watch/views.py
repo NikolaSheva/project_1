@@ -22,13 +22,12 @@ class ProductListView(ListView):
     # context_object_name = 'page_object_list'
     paginate_by = 180
 
-
     def get_queryset(self):
         queryset = super().get_queryset()
         print("⏳ ДО фильтров:", queryset.count())
         self.form = ProductFilterForm(self.request.GET)
 
-        if self.form.is_valid():
+        if self.request.GET and self.form.is_valid():
             condition = self.form.cleaned_data.get('condition')
             special_offer = self.form.cleaned_data.get('special_offer')
             cities = self.form.cleaned_data.get('cities')
@@ -45,10 +44,10 @@ class ProductListView(ListView):
 
             if brand:
                 queryset = queryset.filter(brand__in=brand)
+
         print("GET:", self.request.GET)
         print("is_valid:", self.form.is_valid())
         print("cleaned_data:", self.form.cleaned_data)
-        # фильтрация
         print("✅ ПОСЛЕ фильтров:", queryset.count())
         return queryset
         # return queryset.order_by('created_at')
