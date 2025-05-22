@@ -13,6 +13,7 @@ from loguru import logger
 from django.utils import timezone
 from datetime import timedelta
 import random
+import re
 
 
 # === Константы ===
@@ -106,7 +107,19 @@ class Command(BaseCommand):
                     brand = "Неизвестно"
 
             price_text = tree.xpath('//p[contains(@class, "item-price--text")]/text()')
-            price = price_text[0].strip() if price_text else "Цена по запросу"
+            # price = price_text[0].strip() if price_text else "Цена по запросу"
+            if price_text:
+                price_str = price_text[0].strip()
+                digits = re.findall(r'\d+', price_str)
+                if digits:
+                    price = int(''.join(digits))
+                else:
+                    price = "Цена по запросу"
+
+            else:
+               price = "Цена не найдена"
+
+
 
             city_elem = tree.xpath(
                 '//div[contains(@class, "catalog-item--subinfo-item") and contains(@class, "d-flex") and contains(@class, "py-2")]//strong')
@@ -131,7 +144,7 @@ class Command(BaseCommand):
 
         tree = html.fromstring(content)
         links = tree.xpath('//a[contains(@class, "product-list-item catalog-item")]/@href')
-        return [urljoin(BASE_URL, href) for href in links[:3]]
+        return [urljoin(BASE_URL, href) for href in links]
 
     async def main(self):
         start = time.time()

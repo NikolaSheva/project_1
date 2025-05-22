@@ -29,18 +29,44 @@ TEMPLATE_DIR = BASE_DIR / 'templates'
 # ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 # print("DATABASE_URL:", os.getenv("DATABASE_URL"))
 # Security settings
-SECRET_KEY = os.environ.get('SECRET_KEY')
-DEBUG = env.bool("DEBUG", default=False)
+SECRET_KEY = "django-insecure-s9sj@ft0!sjl*+dv0a6b$x*x1lhl1&rjh&t!j7zhm*=d52wt^j"
+# DEBUG = env.bool("DEBUG", default=False)
+
+DEBUG = True
 # Для ALLOWED_HOSTS
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '.ngrok-free.app',
+    '.ngrok.io',  # разрешает все поддомены ngrok
+]
+#ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '192.168.1.48', 'shaky-brooms-search.loca.lt']
+#ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+# ALLOWED_HOSTS += ['fine-bats-eat.loca.lt']
+# CSRF_TRUSTED_ORIGINS = ['https://shaky-brooms-search.loca.lt']
+CSRF_TRUSTED_ORIGINS = [
+    'http://192.168.1.48:8000',
+    'https://*.ngrok.io',
+    'https://*.ngrok-free.app',
+]
 
-
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-# Чтобы на Render автоматически шёл редирект с HTTP на HTTPS.
-SECURE_SSL_REDIRECT = not DEBUG
+# CSRF_TRUSTED_ORIGINS = ['https://project1-production-32c3.up.railway.app']
 # Render проксирует HTTPS, и без этого Django может думать, что это HTTP
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+# # Чтобы на Render автоматически шёл редирект с HTTP на HTTPS.
+# SECURE_SSL_REDIRECT = not DEBUG
+
+
+# Только для локального запуска!
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = False
+
+
 
 
 
@@ -63,7 +89,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    #'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -97,11 +123,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #     }
 # else:
 #     DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     },
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 #     'postgres': {
 #         'ENGINE': 'django.db.backends.postgresql',
 #         'NAME': 'dbname_a2fl',
@@ -112,13 +139,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #     }
 
 # Replace the SQLite DATABASES configuration with PostgreSQL:
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),  # Чтение из переменной Railway
-        conn_max_age=600,
-        ssl_require=not DEBUG  # SSL для production
-    )
-}
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=os.getenv('DATABASE_URL'),  # Чтение из переменной Railway
+#         conn_max_age=600,
+#         ssl_require=not DEBUG  # SSL для production
+#     )
+# }
 # DATABASE_URL = env("DATABASE_URL")
 #
 # if DEBUG:
@@ -200,13 +227,12 @@ logger.add(
 # Если нужно сохранять логи в файл, добавьте:
 # logger.add("logs/file_{time}.log", rotation="10 MB", retention="10 days")
 # Настройки HTTPS
-if not DEBUG:
-    SECURE_HSTS_SECONDS = 3600
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
+# if not DEBUG:
+#     SECURE_HSTS_SECONDS = 3600
+#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#     SECURE_HSTS_PRELOAD = True
+#     CSRF_COOKIE_SECURE = True
+#     SESSION_COOKIE_SECURE = True
 
 
-CSRF_TRUSTED_ORIGINS = ['https://project1-production-32c3.up.railway.app']
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
