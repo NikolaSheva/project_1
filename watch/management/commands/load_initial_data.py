@@ -51,39 +51,3 @@ class Command(BaseCommand):
             f.write(current_hash)
         self.stdout.write("✅ Загрузка завершена, хеш обновлён.")
 
-# from django.core.management.base import BaseCommand
-# from django.core.management import call_command
-# from django.conf import settings
-# import os
-#
-# class Command(BaseCommand):
-#     help = 'Load initial data from fixtures'
-#
-#     def handle(self, *args, **kwargs):
-#         base_dir = settings.BASE_DIR
-#
-#         fixtures = ['auth.json', 'one_watch.json']
-#
-#         for fixture in fixtures:
-#             path = os.path.join(base_dir, fixture)
-#             if os.path.exists(path):
-#                 self.stdout.write(f"Importing {fixture}...")
-#                 call_command('loaddata', path)
-#             else:
-#                 self.stdout.write(f"⚠️ Fixture {fixture} not found, skipping.")
-#
-
-# from django.core.management.base import BaseCommand
-# from django.core.management import call_command
-# import os
-#
-# class Command(BaseCommand):
-#     help = 'Load initial data from fixtures'
-#
-#     def handle(self, *args, **kwargs):
-#         if os.path.exists('auth.json'):
-#             self.stdout.write("Importing auth.json...")
-#             call_command('loaddata', 'auth.json')
-#         if os.path.exists('watch.json'):
-#             self.stdout.write("Importing watch.json...")
-#             call_command('loaddata', 'watch.json')

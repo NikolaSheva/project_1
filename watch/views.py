@@ -4,7 +4,7 @@ from django.views.generic import ListView, TemplateView, DetailView
 from django.utils import timezone
 from watch.models import Brand, Product, City, FilterPreset
 from watch.forms import ProductFilterForm
-
+from watch.services.exchange import get_usd_rate
 
 
 class Home(TemplateView):
@@ -55,6 +55,7 @@ class ProductListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.form
+        context['usd_rate'] = get_usd_rate()  # добавляем курс доллара
         return context
 
 

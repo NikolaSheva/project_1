@@ -197,7 +197,7 @@ class Command(BaseCommand):
                     'slug': slugify(product_data['name']),
                     'brand': brand,
                     'image_url': product_data['image'],
-                    'price': product_data['price'],
+                    'price_usd': float(product_data['price']) if isinstance(product_data['price'], int) else None,#product_data['price'],
                 }
             )
             # Обработка городов

@@ -2,6 +2,9 @@ from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
 from django.core.validators import RegexValidator
+from django.core.validators import MinValueValidator
+from watch.services.exchange import get_usd_rate
+
 
 class Brand(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name="Название бренда")
@@ -40,6 +43,10 @@ class City(models.Model):
 
 
 class Product(models.Model):
+    def get_price_rub(self):
+        if self.price_usd is not None:
+            return round(self.price_usd * get_usd_rate())
+        return None
     # CONDITION_CHOICES = [
     #     ('new', 'Абсолютно новое'),
     #     ('refurb', 'Изделие "с пробегом"')
@@ -87,11 +94,18 @@ class Product(models.Model):
     #     verbose_name="Состояние"
     # )
 
-    price = models.CharField(
-        max_length=100,
+    # price = models.CharField(
+    #     max_length=100,
+    #     null=True,
+    #     blank=True,
+    #     verbose_name="Цена",
+    #     editable=False
+    # )
+    price_usd = models.FloatField(
         null=True,
         blank=True,
-        verbose_name="Цена"
+        validators=[MinValueValidator(0)],
+        verbose_name="Цена (USD)"
     )
 
     # special_offer = models.CharField(
@@ -113,6 +127,7 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('product_detail', kwargs={'slug': self.slug})
+
 class FilterPreset(models.Model):
     name = models.CharField(
         max_length=100,
