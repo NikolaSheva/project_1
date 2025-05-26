@@ -23,35 +23,22 @@ env = environ.Env(
 # environ.Env.read_env(BASE_DIR / ".env")  # <-- важно
 TEMPLATE_DIR = BASE_DIR / 'templates'
 
-# На это (с fallback значениями):
-# SECRET_KEY = os.getenv('SECRET_KEY', 'dummy-key-for-dev-only')
-# DEBUG = os.getenv('DEBUG', 'False') == 'True'
-# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
-# print("DATABASE_URL:", os.getenv("DATABASE_URL"))
-# Security settings
-SECRET_KEY = "django-insecure-s9sj@ft0!sjl*+dv0a6b$x*x1lhl1&rjh&t!j7zhm*=d52wt^j"
-# DEBUG = env.bool("DEBUG", default=False)
-
-DEBUG = True
+# с fallback значениями:
+SECRET_KEY = env('SECRET_KEY', 'dummy-key-for-dev-only')
+DEBUG = env.bool('DEBUG', default=False)
 # Для ALLOWED_HOSTS
-# ALLOWED_HOSTS = ['*']
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     '.ngrok-free.app',
     '.ngrok.io',  # разрешает все поддомены ngrok
 ]
-#ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '192.168.1.48', 'shaky-brooms-search.loca.lt']
-#ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
-# ALLOWED_HOSTS += ['fine-bats-eat.loca.lt']
-# CSRF_TRUSTED_ORIGINS = ['https://shaky-brooms-search.loca.lt']
+
 CSRF_TRUSTED_ORIGINS = [
     'http://192.168.1.48:8000',
     'https://*.ngrok.io',
     'https://*.ngrok-free.app',
 ]
-
-# CSRF_TRUSTED_ORIGINS = ['https://project1-production-32c3.up.railway.app']
 # Render проксирует HTTPS, и без этого Django может думать, что это HTTP
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -66,10 +53,6 @@ CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
 SECURE_SSL_REDIRECT = False
 
-
-
-
-
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -82,10 +65,12 @@ INSTALLED_APPS = [
     # Third-party apps
     'crispy_forms',
     'crispy_bootstrap5',
+    'corsheaders',
 
     # Local apps
     'watch.apps.WatchConfig',
 ]
+CORS_ALLOW_ALL_ORIGINS = True  # Или конкретные домены
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -117,26 +102,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# if DEBUG:
-#     DATABASES = {
-#         "default": env.db(default="sqlite:///db.sqlite3")
-#     }
-# else:
-#     DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': env.db(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
     }
-}
-#     'postgres': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'dbname_a2fl',
-#         'USER': 'admin',
-#         'PASSWORD': '3zli6AM6tHNYCfCligwOAJ48jEzfQdYO',
-#         'HOST': 'dpg-d0iu8cq4d50c73dvtj50-a.oregon-postgres.render.com',
-#         'PORT': '5432',
+else:
+    DATABASES = {
+        'default': env.db('DATABASE_URL')
+    }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
+# }
 
 # Replace the SQLite DATABASES configuration with PostgreSQL:
 # DATABASES = {
@@ -146,21 +125,7 @@ DATABASES = {
 #         ssl_require=not DEBUG  # SSL для production
 #     )
 # }
-# DATABASE_URL = env("DATABASE_URL")
-#
-# if DEBUG:
-#     DATABASES = {
-#         "default": env.db(default="sqlite:///db.sqlite3")
-#     }
-# else:
-#     DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
-# Database
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
-#         conn_max_age=600
-#     )
-# }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -223,7 +188,11 @@ logger.add(
     backtrace=True,
     diagnose=True,
 )
-
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
 # Если нужно сохранять логи в файл, добавьте:
 # logger.add("logs/file_{time}.log", rotation="10 MB", retention="10 days")
 # Настройки HTTPS

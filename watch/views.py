@@ -1,10 +1,10 @@
 from django.shortcuts import render
-# from django.core.paginator import Paginator
 from django.views.generic import ListView, TemplateView, DetailView
 from django.utils import timezone
 from watch.models import Brand, Product, City, FilterPreset
 from watch.forms import ProductFilterForm
 from watch.services.exchange import get_usd_rate
+from django.http import JsonResponse
 
 
 class Home(TemplateView):
@@ -66,5 +66,9 @@ class BrandDetail(DetailView):
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
 
-
+def usd_rate_api(request):
+    rate = get_usd_rate()
+    return JsonResponse({
+        'rate': round(rate, 2)
+    })
 

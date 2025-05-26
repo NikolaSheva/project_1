@@ -18,5 +18,54 @@
             <p class="lead text-info fw-bold fs-5 fst-italic">Здесь вы найдете эксклюзивные коллекции часов</p>
         </div>
     </div>
+    <div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card bg-transparent text-white border-white">
+            <div class="card-body">
+                <p class="card-text">
+                    Текущий курс: 
+                    <strong id="live-usd-rate">Загрузка...</strong>
+                    <small class="d-block text-muted-50" id="rate-update-time"></small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function formatCurrency(value) {
+    return new Intl.NumberFormat('ru-RU', {
+        style: 'currency',
+        currency: 'RUB',
+        minimumFractionDigits: 2
+    }).format(value).replace('₽', 'RUB');
+}
+
+function updateRate() {
+    const rateElement = document.getElementById('live-usd-rate');
+    const timeElement = document.getElementById('rate-update-time');
+
+    rateElement.innerHTML = `
+        <div class="spinner-border text-light" role="status" style="width: 1.5rem; height: 1.5rem;">
+            <span class="visually-hidden">Загрузка...</span>
+        </div>
+    `;
+    timeElement.textContent = '';
+
+    fetch('/api/usd-rate/')
+        .then(res => res.json())
+        .then(data => {
+            rateElement.textContent = `1 USD = ${formatCurrency(data.rate)}`;
+            timeElement.textContent = `Обновлено: ${new Date().toLocaleString('ru-RU')}`;
+        })
+        .catch(err => {
+            rateElement.textContent = "Ошибка загрузки курса";
+            console.error("Ошибка при получении курса:", err);
+        });
+}
+
+updateRate();
+setInterval(updateRate, 600000);
+</script>
 </div>
 {% endblock %}
