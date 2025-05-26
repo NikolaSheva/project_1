@@ -15,7 +15,7 @@
         <div class="col-md-12">
             <h4 class="display-6 text-info ">Добро пожаловать в наш часовой магазин
             </h4>
-            <p class="lead text-info fw-bold fs-5 fst-italic">Здесь вы найдете эксклюзивные коллекции часов</p>
+{#            <p class="lead text-info fw-bold fs-5 fst-italic">Здесь вы найдете эксклюзивные коллекции часов</p>#}
         </div>
     </div>
     <div class="row mt-4">
@@ -38,34 +38,30 @@ function formatCurrency(value) {
         style: 'currency',
         currency: 'RUB',
         minimumFractionDigits: 2
-    }).format(value).replace('₽', 'RUB');
+    }).format(value);
 }
 
-function updateRate() {
-    const rateElement = document.getElementById('live-usd-rate');
-    const timeElement = document.getElementById('rate-update-time');
-
-    rateElement.innerHTML = `
-        <div class="spinner-border text-light" role="status" style="width: 1.5rem; height: 1.5rem;">
-            <span class="visually-hidden">Загрузка...</span>
-        </div>
-    `;
-    timeElement.textContent = '';
-
-    fetch('/api/usd-rate/')
-        .then(res => res.json())
-        .then(data => {
-            rateElement.textContent = `1 USD = ${formatCurrency(data.rate)}`;
-            timeElement.textContent = `Обновлено: ${new Date().toLocaleString('ru-RU')}`;
+function updateUsdRate() {
+    fetch('https://open.er-api.com/v6/latest/USD')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("HTTP error " + response.status);
+            }
+            return response.json();
         })
-        .catch(err => {
-            rateElement.textContent = "Ошибка загрузки курса";
-            console.error("Ошибка при получении курса:", err);
+        .then(data => {
+            const rate = data.rates.RUB;
+            document.getElementById('live-usd-rate').textContent = `1 USD ≈ ${formatCurrency(rate)}`;
+            document.getElementById('rate-update-time').textContent = `Обновлено: ${new Date().toLocaleString()}`;
+        })
+        .catch(error => {
+            console.error("Ошибка загрузки курса валюты:", error);
+            document.getElementById('live-usd-rate').textContent = "Ошибка загрузки курса";
         });
 }
 
-updateRate();
-setInterval(updateRate, 600000);
+updateUsdRate(); // загрузка при старте
+setInterval(updateUsdRate, 10 * 60 * 1000); // обновление каждые 10 минут
 </script>
 </div>
 {% endblock %}

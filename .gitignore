@@ -9,4 +9,7 @@ venv/
 .DS_Store
 staticfiles/
 media/
+.env
+*.log
+*.sqlite3
 

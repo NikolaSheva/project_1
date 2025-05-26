@@ -21,8 +21,13 @@
         <div class="col-lg-9 col-md-8">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="h5 text-muted">
-                    Курс доллара: <span class="text-dark fw-bold">1 USD ≈ {{ usd_rate|floatformat:2 }} ₽</span>
+                    Курс доллара: <span id="live-usd-rate" 
+                                        class="text-dark fw-bold">1 USD ≈ {{ usd_rate|floatformat:2 }} ₽</span>
+                    <small class="d-block text-muted-50" id="rate-update-time"></small>
                 </h2>
+{#                <h2 class="h5 text-muted">#}
+{#                    Курс доллара: <span class="text-dark fw-bold">1 USD ≈ {{ usd_rate|floatformat:2 }} ₽</span>#}
+{#                </h2>#}
             </div>
             <h4>Каталог часов</h4>
             <p>Всего товаров (queryset): {{ page_obj.paginator.count }}</p>
@@ -80,20 +85,24 @@
 
 {% block scripts %}
 {{ block.super }}
-<!-- Fancybox JS -->
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
-<script>
-  // Инициализация Fancybox
-  Fancybox.bind("[data-fancybox]", {
-    // Настройки можно добавить здесь
-    Thumbs: false,
-    Toolbar: {
-      display: {
-        left: [],
-        middle: [],
-        right: ["close"],
-      },
-    },
-  });
-</script>
+<script src="{% static 'js/exchangeRate.js' %}"></script>
 {% endblock %}
+{#{% block scripts %}#}
+{#{{ block.super }}#}
+{#<!-- Fancybox JS -->#}
+{#<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>#}
+{#<script>#}
+{#  // Инициализация Fancybox#}
+{#  Fancybox.bind("[data-fancybox]", {#}
+{#    // Настройки можно добавить здесь#}
+{#    Thumbs: false,#}
+{#    Toolbar: {#}
+{#      display: {#}
+{#        left: [],#}
+{#        middle: [],#}
+{#        right: ["close"],#}
+{#      },#}
+{#    },#}
+{#  });#}
+{#</script>#}
+{#{% endblock %}#}

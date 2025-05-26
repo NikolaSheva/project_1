@@ -20,11 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(
     DEBUG=(bool, False)
 )
-# environ.Env.read_env(BASE_DIR / ".env")  # <-- важно
+environ.Env.read_env(BASE_DIR / ".env")  # <-- важно
 TEMPLATE_DIR = BASE_DIR / 'templates'
 
 # с fallback значениями:
-SECRET_KEY = env('SECRET_KEY', 'dummy-key-for-dev-only')
+SECRET_KEY = env('SECRET_KEY')
+# SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=False)
 # Для ALLOWED_HOSTS
 ALLOWED_HOSTS = [
@@ -70,9 +71,14 @@ INSTALLED_APPS = [
     # Local apps
     'watch.apps.WatchConfig',
 ]
-CORS_ALLOW_ALL_ORIGINS = True  # Или конкретные домены
+CORS_ALLOWED_ORIGINS = [
+    "https://yourdomain.com",
+    "http://localhost:8000",
+    "http://localhost:8080"
+]  # Или конкретные домены
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     #'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -102,20 +108,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-if DEBUG:
-    DATABASES = {
-        'default': env.db(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
-    }
-else:
-    DATABASES = {
-        'default': env.db('DATABASE_URL')
-    }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+# if DEBUG:
+#     DATABASES = {
+#         'default': env.db(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
 #     }
-# }
+# else:
+#     DATABASES = {
+#         'default': env.db('DATABASE_URL')
+#     }
+DATABASES = {
+    'default': dj_database_url.config(
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+        conn_max_age=600,
+        ssl_require=not DEBUG
+    )
+}
 
 # Replace the SQLite DATABASES configuration with PostgreSQL:
 # DATABASES = {
@@ -145,7 +152,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 LANGUAGE_CODE = 'ru-ru'
-TIME_ZONE = 'America/Los_Angeles'
+TIME_ZONE = 'Asia/Yekaterinburg'
 USE_I18N = True
 USE_TZ = True
 
@@ -156,9 +163,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-# This setting informs Django of the URI path from which your static files will be served to users
-# Here, they well be accessible at your-domain.onrender.com/static/... or yourcustomdomain.com/static/...
-STATIC_URL = '/static/'
 
 # This production code might break development mode, so we check whether we're in DEBUG mode
 if not DEBUG:
@@ -188,7 +192,13 @@ logger.add(
     backtrace=True,
     diagnose=True,
 )
+# Для production используйте Redis/Memcached
 CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': env('REDIS_URL', default='redis://localhost:6379/1'),
+    }
+} if not DEBUG else {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
@@ -204,4 +214,11 @@ CACHES = {
 #     SESSION_COOKIE_SECURE = True
 
 
-
+# settings/production.py
+# from .base import *
+#
+# DEBUG = False
+# ALLOWED_HOSTS = ['yourdomain.com', 'api.yourdomain.com']
+# SECURE_HSTS_SECONDS = 31536000  # 1 year
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True

@@ -1,0 +1,9 @@
+repos:
+  - repo: https://github.com/awslabs/git-secrets
+    rev: 2.0.1
+    hooks:
+      - id: git-secrets
+        args: ['--no-pager']
+        # Дополнительные шаблоны:
+        additional_dependencies:
+          - git-secrets==2.0.1
