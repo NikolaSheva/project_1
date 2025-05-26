@@ -1,5 +1,11 @@
-<footer class="mt-5">
-    <h6 class="text-center text-muted" style="font-size:.8rem;">
-        &copy; {% now "d F Y H:i" %} By NickSheva. Все права защищены.
-    </h6>
+<footer class="mt-5 py-3 bg-light">  <!-- Добавлен отступ и светлый фон -->
+    <div class="container">  <!-- Ограничение ширины и центрирование -->
+        <p class="text-center mb-0" style="font-size: 0.8rem; color: #6c757d;">  <!-- Улучшенные стили -->
+            &copy; {% now "d F Y" %} By NickSheva. Все права защищены.
+            <span class="d-block d-sm-inline">  <!-- Адаптивный перенос -->
+                <span class="mx-2">|</span>  <!-- Разделитель -->
+                Последнее обновление: {% now "H:i" %}
+            </span>
+        </p>
+    </div>
 </footer>

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.core.paginator import Paginator
+# from django.core.paginator import Paginator
 from django.views.generic import ListView, TemplateView, DetailView
 from django.utils import timezone
 from watch.models import Brand, Product, City, FilterPreset

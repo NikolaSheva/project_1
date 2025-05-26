@@ -1,9 +1,8 @@
 from django import template
 from watch.services.exchange import get_usd_rate
+from functools import lru_cache
 
 register = template.Library()
-
-from functools import lru_cache
 
 @lru_cache(maxsize=1)
 def get_cached_usd_rate():
