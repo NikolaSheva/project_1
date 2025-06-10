@@ -8,13 +8,13 @@ virtualenv==20.31.2
 pipx==1.7.1
 nodeenv==1.9.1
 userpath==1.9.2
+black
 
 # debug/утилиты
 django-debug-toolbar==5.2.0
 django-extensions==4.1
 
-# типично также добавить (если используешь):
-# black
+# также можно добавить:
 # flake8
 # pytest
 # ipython
