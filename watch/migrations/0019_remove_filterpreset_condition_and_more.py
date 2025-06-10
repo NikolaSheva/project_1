@@ -6,34 +6,39 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('watch', '0018_alter_filterpreset_in_stock'),
+        ("watch", "0018_alter_filterpreset_in_stock"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='filterpreset',
-            name='condition',
+            model_name="filterpreset",
+            name="condition",
         ),
         migrations.RemoveField(
-            model_name='filterpreset',
-            name='special_offers_only',
+            model_name="filterpreset",
+            name="special_offers_only",
         ),
         migrations.RemoveField(
-            model_name='product',
-            name='condition',
+            model_name="product",
+            name="condition",
         ),
         migrations.RemoveField(
-            model_name='product',
-            name='special_offer',
+            model_name="product",
+            name="special_offer",
         ),
         migrations.AlterField(
-            model_name='city',
-            name='name',
+            model_name="city",
+            name="name",
             field=models.CharField(max_length=50, unique=True),
         ),
         migrations.AlterField(
-            model_name='filterpreset',
-            name='in_stock',
-            field=models.ManyToManyField(blank=True, related_name='filter_presets', to='watch.city', verbose_name='Наличие в городах'),
+            model_name="filterpreset",
+            name="in_stock",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="filter_presets",
+                to="watch.city",
+                verbose_name="Наличие в городах",
+            ),
         ),
     ]

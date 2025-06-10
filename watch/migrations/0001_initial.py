@@ -8,44 +8,109 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Brand',
+            name="Brand",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, unique=True, verbose_name='Название бренда')),
-                ('slug', models.SlugField(blank=True, max_length=100, unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=100, unique=True, verbose_name="Название бренда"
+                    ),
+                ),
+                ("slug", models.SlugField(blank=True, max_length=100, unique=True)),
             ],
             options={
-                'verbose_name': 'Бренд часов',
-                'verbose_name_plural': 'Бренды часов',
-                'ordering': ['name'],
+                "verbose_name": "Бренд часов",
+                "verbose_name_plural": "Бренды часов",
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='FilterPreset',
+            name="FilterPreset",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='Название фильтра')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')),
-                ('is_active', models.BooleanField(default=True, verbose_name='Активный фильтр')),
-                ('brand', models.ManyToManyField(blank=True, to='watch.brand', verbose_name='Бренды')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=100, verbose_name="Название фильтра"),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Дата создания"
+                    ),
+                ),
+                (
+                    "is_active",
+                    models.BooleanField(default=True, verbose_name="Активный фильтр"),
+                ),
+                (
+                    "brand",
+                    models.ManyToManyField(
+                        blank=True, to="watch.brand", verbose_name="Бренды"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('url', models.URLField(unique=True, verbose_name='URL товара')),
-                ('title', models.CharField(max_length=255, verbose_name='Название')),
-                ('slug', models.SlugField(blank=True, max_length=255)),
-                ('image_url', models.URLField(blank=True, null=True, verbose_name='URL изображения')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Дата обновления')),
-                ('brand', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='products', to='watch.brand', verbose_name='Бренд')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("url", models.URLField(unique=True, verbose_name="URL товара")),
+                ("title", models.CharField(max_length=255, verbose_name="Название")),
+                ("slug", models.SlugField(blank=True, max_length=255)),
+                (
+                    "image_url",
+                    models.URLField(
+                        blank=True, null=True, verbose_name="URL изображения"
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Дата создания"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Дата обновления"),
+                ),
+                (
+                    "brand",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="products",
+                        to="watch.brand",
+                        verbose_name="Бренд",
+                    ),
+                ),
             ],
         ),
     ]

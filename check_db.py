@@ -1,12 +1,13 @@
 import os
+from pathlib import Path
+
 import django
 from django.db import connection
 from dotenv import load_dotenv
-from pathlib import Path
 
 # Загрузка .env
 BASE_DIR = Path(__file__).resolve().parent
-load_dotenv(BASE_DIR / '.env')
+load_dotenv(BASE_DIR / ".env")
 
 # Проверка DATABASE_URL
 db_url = os.getenv("DATABASE_URL")

@@ -6,56 +6,63 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('watch', '0009_rename_in_stock_filterpreset_cities_product_cities'),
+        ("watch", "0009_rename_in_stock_filterpreset_cities_product_cities"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='filterpreset',
-            old_name='cities',
-            new_name='city',
+            model_name="filterpreset",
+            old_name="cities",
+            new_name="city",
         ),
         migrations.RemoveField(
-            model_name='filterpreset',
-            name='condition',
+            model_name="filterpreset",
+            name="condition",
         ),
         migrations.RemoveField(
-            model_name='filterpreset',
-            name='special_offers_only',
+            model_name="filterpreset",
+            name="special_offers_only",
         ),
         migrations.RemoveField(
-            model_name='product',
-            name='cities',
+            model_name="product",
+            name="cities",
         ),
         migrations.RemoveField(
-            model_name='product',
-            name='condition',
+            model_name="product",
+            name="condition",
         ),
         migrations.RemoveField(
-            model_name='product',
-            name='in_stock',
+            model_name="product",
+            name="in_stock",
         ),
         migrations.RemoveField(
-            model_name='product',
-            name='price',
+            model_name="product",
+            name="price",
         ),
         migrations.RemoveField(
-            model_name='product',
-            name='special_offer',
+            model_name="product",
+            name="special_offer",
         ),
         migrations.AddField(
-            model_name='product',
-            name='city',
-            field=models.ManyToManyField(blank=True, related_name='products', to='watch.city', verbose_name='Наличие в городах'),
+            model_name="product",
+            name="city",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="products",
+                to="watch.city",
+                verbose_name="Наличие в городах",
+            ),
         ),
         migrations.AlterField(
-            model_name='city',
-            name='name',
-            field=models.CharField(max_length=50, unique=True, verbose_name='Название города'),
+            model_name="city",
+            name="name",
+            field=models.CharField(
+                max_length=50, unique=True, verbose_name="Название города"
+            ),
         ),
         migrations.AlterField(
-            model_name='city',
-            name='slug',
+            model_name="city",
+            name="slug",
             field=models.SlugField(blank=True, max_length=60, unique=True),
         ),
     ]

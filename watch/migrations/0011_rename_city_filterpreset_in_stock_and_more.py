@@ -6,43 +6,79 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('watch', '0010_rename_cities_filterpreset_city_and_more'),
+        ("watch", "0010_rename_cities_filterpreset_city_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='filterpreset',
-            old_name='city',
-            new_name='in_stock',
+            model_name="filterpreset",
+            old_name="city",
+            new_name="in_stock",
         ),
         migrations.RenameField(
-            model_name='product',
-            old_name='city',
-            new_name='cities',
+            model_name="product",
+            old_name="city",
+            new_name="cities",
         ),
         migrations.AddField(
-            model_name='filterpreset',
-            name='condition',
-            field=models.CharField(blank=True, choices=[('new', 'Абсолютно новое'), ('refurb', 'Изделие "с пробегом"')], max_length=20, null=True, verbose_name='Состояние'),
+            model_name="filterpreset",
+            name="condition",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("new", "Абсолютно новое"),
+                    ("refurb", 'Изделие "с пробегом"'),
+                ],
+                max_length=20,
+                null=True,
+                verbose_name="Состояние",
+            ),
         ),
         migrations.AddField(
-            model_name='filterpreset',
-            name='special_offers_only',
-            field=models.BooleanField(default=False, verbose_name='Только спецпредложения'),
+            model_name="filterpreset",
+            name="special_offers_only",
+            field=models.BooleanField(
+                default=False, verbose_name="Только спецпредложения"
+            ),
         ),
         migrations.AddField(
-            model_name='product',
-            name='condition',
-            field=models.CharField(choices=[('new', 'Абсолютно новое'), ('refurb', 'Изделие "с пробегом"')], db_index=True, default='new', max_length=20, verbose_name='Состояние'),
+            model_name="product",
+            name="condition",
+            field=models.CharField(
+                choices=[
+                    ("new", "Абсолютно новое"),
+                    ("refurb", 'Изделие "с пробегом"'),
+                ],
+                db_index=True,
+                default="new",
+                max_length=20,
+                verbose_name="Состояние",
+            ),
         ),
         migrations.AddField(
-            model_name='product',
-            name='price',
-            field=models.CharField(blank=True, max_length=100, null=True, verbose_name='Цена'),
+            model_name="product",
+            name="price",
+            field=models.CharField(
+                blank=True, max_length=100, null=True, verbose_name="Цена"
+            ),
         ),
         migrations.AddField(
-            model_name='product',
-            name='special_offer',
-            field=models.CharField(blank=True, choices=[('G', 'Grand комплектация'), ('L', 'Limited editions'), ('S', 'Special editions'), ('A', 'Акция'), ('N', 'Новинка'), ('T', 'Тюнинг')], db_index=True, default='', max_length=2, verbose_name='Спецпредложение'),
+            model_name="product",
+            name="special_offer",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("G", "Grand комплектация"),
+                    ("L", "Limited editions"),
+                    ("S", "Special editions"),
+                    ("A", "Акция"),
+                    ("N", "Новинка"),
+                    ("T", "Тюнинг"),
+                ],
+                db_index=True,
+                default="",
+                max_length=2,
+                verbose_name="Спецпредложение",
+            ),
         ),
     ]

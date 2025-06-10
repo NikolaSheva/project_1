@@ -6,15 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('watch', '0019_remove_filterpreset_condition_and_more'),
+        ("watch", "0019_remove_filterpreset_condition_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='WatchItem',
+            name="WatchItem",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('price_id', models.IntegerField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("price_id", models.IntegerField(blank=True, null=True)),
             ],
         ),
     ]

@@ -1,24 +1,23 @@
-from django.shortcuts import render
-from django.views.generic import ListView, TemplateView, DetailView
-from django.utils import timezone
-from watch.models import Brand, Product, City, FilterPreset
-from watch.forms import ProductFilterForm
-from watch.services.exchange import get_usd_rate
 from django.http import JsonResponse
+from django.views.generic import DetailView, ListView, TemplateView
+
+from watch.forms import ProductFilterForm
+from watch.models import Brand, Product
+from watch.services.exchange import get_usd_rate
 
 
 class Home(TemplateView):
-    template_name = 'watch/home.html'
+    template_name = "watch/home.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['today'] = ProductFilterForm()
+        context["today"] = ProductFilterForm()
         return context
 
 
 class ProductListView(ListView):
     model = Product
-    template_name = 'watch/product_list.html'
+    template_name = "watch/product_list.html"
     # context_object_name = 'page_object_list'
     paginate_by = 180
 
@@ -28,10 +27,10 @@ class ProductListView(ListView):
         self.form = ProductFilterForm(self.request.GET)
 
         if self.request.GET and self.form.is_valid():
-            condition = self.form.cleaned_data.get('condition')
-            special_offer = self.form.cleaned_data.get('special_offer')
-            cities = self.form.cleaned_data.get('cities')
-            brand = self.form.cleaned_data.get('brand')
+            condition = self.form.cleaned_data.get("condition")
+            special_offer = self.form.cleaned_data.get("special_offer")
+            cities = self.form.cleaned_data.get("cities")
+            brand = self.form.cleaned_data.get("brand")
 
             if condition:
                 queryset = queryset.filter(condition__in=condition)
@@ -54,21 +53,19 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = self.form
-        context['usd_rate'] = get_usd_rate()  # добавляем курс доллара
+        context["form"] = self.form
+        context["usd_rate"] = get_usd_rate()  # добавляем курс доллара
         return context
 
 
 class BrandDetail(DetailView):
     model = Brand
-    template_name = 'watch/brands_detail.html'
-    context_object_name = 'brand_object'
-    slug_field = 'slug'
-    slug_url_kwarg = 'slug'
+    template_name = "watch/brands_detail.html"
+    context_object_name = "brand_object"
+    slug_field = "slug"
+    slug_url_kwarg = "slug"
+
 
 def usd_rate_api(request):
     rate = get_usd_rate()
-    return JsonResponse({
-        'rate': round(rate, 2)
-    })
-
+    return JsonResponse({"rate": round(rate, 2)})

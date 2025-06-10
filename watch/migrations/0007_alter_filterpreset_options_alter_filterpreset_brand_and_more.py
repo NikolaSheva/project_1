@@ -6,41 +6,79 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('watch', '0006_city_remove_filterpreset_in_stock_and_more'),
+        ("watch", "0006_city_remove_filterpreset_in_stock_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='filterpreset',
-            options={'ordering': ['-created_at']},
+            name="filterpreset",
+            options={"ordering": ["-created_at"]},
         ),
         migrations.AlterField(
-            model_name='filterpreset',
-            name='brand',
-            field=models.ManyToManyField(blank=True, related_name='filter_presets', to='watch.brand', verbose_name='Бренды'),
+            model_name="filterpreset",
+            name="brand",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="filter_presets",
+                to="watch.brand",
+                verbose_name="Бренды",
+            ),
         ),
         migrations.AlterField(
-            model_name='filterpreset',
-            name='in_stock',
-            field=models.ManyToManyField(blank=True, related_name='filter_presets', to='watch.city', verbose_name='Наличие в городах'),
+            model_name="filterpreset",
+            name="in_stock",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="filter_presets",
+                to="watch.city",
+                verbose_name="Наличие в городах",
+            ),
         ),
         migrations.AlterField(
-            model_name='product',
-            name='condition',
-            field=models.CharField(choices=[('new', 'Абсолютно новое'), ('refurb', 'Изделие "с пробегом"')], db_index=True, default='new', max_length=20, verbose_name='Состояние'),
+            model_name="product",
+            name="condition",
+            field=models.CharField(
+                choices=[
+                    ("new", "Абсолютно новое"),
+                    ("refurb", 'Изделие "с пробегом"'),
+                ],
+                db_index=True,
+                default="new",
+                max_length=20,
+                verbose_name="Состояние",
+            ),
         ),
         migrations.AlterField(
-            model_name='product',
-            name='in_stock',
-            field=models.ManyToManyField(blank=True, related_name='products', to='watch.city', verbose_name='Наличие в городах'),
+            model_name="product",
+            name="in_stock",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="products",
+                to="watch.city",
+                verbose_name="Наличие в городах",
+            ),
         ),
         migrations.AlterField(
-            model_name='product',
-            name='special_offer',
-            field=models.CharField(blank=True, choices=[('G', 'Grand комплектация'), ('L', 'Limited editions'), ('S', 'Special editions'), ('A', 'Акция'), ('N', 'Новинка'), ('T', 'Тюнинг')], db_index=True, default='', max_length=2, verbose_name='Спецпредложение'),
+            model_name="product",
+            name="special_offer",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("G", "Grand комплектация"),
+                    ("L", "Limited editions"),
+                    ("S", "Special editions"),
+                    ("A", "Акция"),
+                    ("N", "Новинка"),
+                    ("T", "Тюнинг"),
+                ],
+                db_index=True,
+                default="",
+                max_length=2,
+                verbose_name="Спецпредложение",
+            ),
         ),
         migrations.AddIndex(
-            model_name='product',
-            index=models.Index(fields=['title'], name='watch_produ_title_91665c_idx'),
+            model_name="product",
+            index=models.Index(fields=["title"], name="watch_produ_title_91665c_idx"),
         ),
     ]

@@ -7,17 +7,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('watch', '0020_watchitem'),
+        ("watch", "0020_watchitem"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='watchitem',
-            name='price_id',
+            model_name="watchitem",
+            name="price_id",
         ),
         migrations.AddField(
-            model_name='watchitem',
-            name='price_usd',
-            field=models.FloatField(blank=True, null=True, validators=[django.core.validators.MinValueValidator(0)], verbose_name='Цена (USD)'),
+            model_name="watchitem",
+            name="price_usd",
+            field=models.FloatField(
+                blank=True,
+                null=True,
+                validators=[django.core.validators.MinValueValidator(0)],
+                verbose_name="Цена (USD)",
+            ),
         ),
     ]

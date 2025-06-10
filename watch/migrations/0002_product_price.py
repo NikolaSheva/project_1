@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('watch', '0001_initial'),
+        ("watch", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='product',
-            name='price',
-            field=models.PositiveIntegerField(blank=True, null=True, verbose_name='Цена'),
+            model_name="product",
+            name="price",
+            field=models.PositiveIntegerField(
+                blank=True, null=True, verbose_name="Цена"
+            ),
         ),
     ]

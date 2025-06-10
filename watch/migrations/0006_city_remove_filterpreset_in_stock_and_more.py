@@ -6,49 +6,87 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('watch', '0005_product_condition'),
+        ("watch", "0005_product_condition"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='City',
+            name="City",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, unique=True, verbose_name='Название города')),
-                ('slug', models.SlugField(blank=True, max_length=100, unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=100, unique=True, verbose_name="Название города"
+                    ),
+                ),
+                ("slug", models.SlugField(blank=True, max_length=100, unique=True)),
             ],
             options={
-                'verbose_name': 'Город',
-                'verbose_name_plural': 'Города',
-                'ordering': ['name'],
+                "verbose_name": "Город",
+                "verbose_name_plural": "Города",
+                "ordering": ["name"],
             },
         ),
         migrations.RemoveField(
-            model_name='filterpreset',
-            name='in_stock',
+            model_name="filterpreset",
+            name="in_stock",
         ),
         migrations.AlterField(
-            model_name='product',
-            name='condition',
-            field=models.CharField(choices=[('new', 'Абсолютно новое'), ('refurb', 'Изделие "с пробегом"')], default='new', max_length=20, verbose_name='Состояние'),
+            model_name="product",
+            name="condition",
+            field=models.CharField(
+                choices=[
+                    ("new", "Абсолютно новое"),
+                    ("refurb", 'Изделие "с пробегом"'),
+                ],
+                default="new",
+                max_length=20,
+                verbose_name="Состояние",
+            ),
         ),
         migrations.RemoveField(
-            model_name='product',
-            name='in_stock',
+            model_name="product",
+            name="in_stock",
         ),
         migrations.AlterField(
-            model_name='product',
-            name='special_offer',
-            field=models.CharField(blank=True, choices=[('G', 'Grand комплектация'), ('L', 'Limited editions'), ('S', 'Special editions'), ('A', 'Акция'), ('N', 'Новинка'), ('T', 'Тюнинг')], default='', max_length=2, verbose_name='Спецпредложение'),
+            model_name="product",
+            name="special_offer",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("G", "Grand комплектация"),
+                    ("L", "Limited editions"),
+                    ("S", "Special editions"),
+                    ("A", "Акция"),
+                    ("N", "Новинка"),
+                    ("T", "Тюнинг"),
+                ],
+                default="",
+                max_length=2,
+                verbose_name="Спецпредложение",
+            ),
         ),
         migrations.AddField(
-            model_name='filterpreset',
-            name='in_stock',
-            field=models.ManyToManyField(blank=True, to='watch.city', verbose_name='Наличие в городах'),
+            model_name="filterpreset",
+            name="in_stock",
+            field=models.ManyToManyField(
+                blank=True, to="watch.city", verbose_name="Наличие в городах"
+            ),
         ),
         migrations.AddField(
-            model_name='product',
-            name='in_stock',
-            field=models.ManyToManyField(blank=True, to='watch.city', verbose_name='Наличие в городах'),
+            model_name="product",
+            name="in_stock",
+            field=models.ManyToManyField(
+                blank=True, to="watch.city", verbose_name="Наличие в городах"
+            ),
         ),
     ]

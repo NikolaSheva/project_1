@@ -1,6 +1,8 @@
 import logging
+
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
+
 from watch.models import Brand
 
 logger = logging.getLogger(__name__)
@@ -92,11 +94,12 @@ WATCHES = [
     "Vacheron Constantin",
     "Van Cleef & Arpels",
     "Wyler",
-    "Zenith"
+    "Zenith",
 ]
 
+
 class Command(BaseCommand):
-    help = 'Добавляет предопределенные бренды часов в базу данных'
+    help = "Добавляет предопределенные бренды часов в базу данных"
 
     def handle(self, *args, **options):
         logger.info("Начало добавления брендов...")
@@ -105,8 +108,7 @@ class Command(BaseCommand):
         for name in WATCHES:
             slug = slugify(name)
             brand, created = Brand.objects.get_or_create(
-                slug=slug,
-                defaults={'name': name}
+                slug=slug, defaults={"name": name}
             )
             if created:
                 added += 1
@@ -115,6 +117,4 @@ class Command(BaseCommand):
                 exists += 1
 
         logger.info(f"Итог: Добавлено {added}, существовало {exists}")
-        self.stdout.write(self.style.SUCCESS('Сидирование брендов завершено!'))
-
-
+        self.stdout.write(self.style.SUCCESS("Сидирование брендов завершено!"))

@@ -6,17 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('watch', '0012_rename_cities_product_city'),
+        ("watch", "0012_rename_cities_product_city"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='product',
-            name='city',
+            model_name="product",
+            name="city",
         ),
         migrations.AddField(
-            model_name='product',
-            name='cities',
-            field=models.ManyToManyField(related_name='products', to='watch.city'),
+            model_name="product",
+            name="cities",
+            field=models.ManyToManyField(related_name="products", to="watch.city"),
         ),
     ]

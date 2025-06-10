@@ -6,38 +6,92 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('watch', '0003_alter_product_price'),
+        ("watch", "0003_alter_product_price"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='filterpreset',
-            name='condition',
-            field=models.CharField(blank=True, choices=[('new', 'Абсолютно новое'), ('refurb', 'Изделие "с пробегом"')], max_length=20, null=True, verbose_name='Состояние'),
+            model_name="filterpreset",
+            name="condition",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("new", "Абсолютно новое"),
+                    ("refurb", 'Изделие "с пробегом"'),
+                ],
+                max_length=20,
+                null=True,
+                verbose_name="Состояние",
+            ),
         ),
         migrations.AddField(
-            model_name='filterpreset',
-            name='in_stock',
-            field=models.CharField(blank=True, choices=[('TM', 'Москва'), ('TC', 'ТЦ РигаМолл'), ('TS', 'Санкт-Петербург'), ('TR', 'Ростов-на-Дону'), ('TK', 'Краснодар'), ('TE', 'Екатеринбург'), ('TT', 'Ташкент')], max_length=2, null=True, verbose_name='Наличие в городах'),
+            model_name="filterpreset",
+            name="in_stock",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("TM", "Москва"),
+                    ("TC", "ТЦ РигаМолл"),
+                    ("TS", "Санкт-Петербург"),
+                    ("TR", "Ростов-на-Дону"),
+                    ("TK", "Краснодар"),
+                    ("TE", "Екатеринбург"),
+                    ("TT", "Ташкент"),
+                ],
+                max_length=2,
+                null=True,
+                verbose_name="Наличие в городах",
+            ),
         ),
         migrations.AddField(
-            model_name='filterpreset',
-            name='special_offers_only',
-            field=models.BooleanField(default=False, verbose_name='Только спецпредложения'),
+            model_name="filterpreset",
+            name="special_offers_only",
+            field=models.BooleanField(
+                default=False, verbose_name="Только спецпредложения"
+            ),
         ),
         migrations.AddField(
-            model_name='product',
-            name='in_stock',
-            field=models.CharField(blank=True, choices=[('TM', 'Москва'), ('TC', 'ТЦ РигаМолл'), ('TS', 'Санкт-Петербург'), ('TR', 'Ростов-на-Дону'), ('TK', 'Краснодар'), ('TE', 'Екатеринбург'), ('TT', 'Ташкент')], max_length=2, null=True, verbose_name='Наличие в городах'),
+            model_name="product",
+            name="in_stock",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("TM", "Москва"),
+                    ("TC", "ТЦ РигаМолл"),
+                    ("TS", "Санкт-Петербург"),
+                    ("TR", "Ростов-на-Дону"),
+                    ("TK", "Краснодар"),
+                    ("TE", "Екатеринбург"),
+                    ("TT", "Ташкент"),
+                ],
+                max_length=2,
+                null=True,
+                verbose_name="Наличие в городах",
+            ),
         ),
         migrations.AddField(
-            model_name='product',
-            name='special_offer',
-            field=models.CharField(blank=True, choices=[('G', 'Grand комплектация'), ('L', 'Limited editions'), ('S', 'Special editions'), ('A', 'Акция'), ('N', 'Новинка'), ('T', 'Тюнинг')], max_length=2, null=True, verbose_name='Спецпредложение'),
+            model_name="product",
+            name="special_offer",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("G", "Grand комплектация"),
+                    ("L", "Limited editions"),
+                    ("S", "Special editions"),
+                    ("A", "Акция"),
+                    ("N", "Новинка"),
+                    ("T", "Тюнинг"),
+                ],
+                max_length=2,
+                null=True,
+                verbose_name="Спецпредложение",
+            ),
         ),
         migrations.AlterField(
-            model_name='product',
-            name='price',
-            field=models.CharField(blank=True, max_length=100, null=True, verbose_name='Цена'),
+            model_name="product",
+            name="price",
+            field=models.CharField(
+                blank=True, max_length=100, null=True, verbose_name="Цена"
+            ),
         ),
     ]

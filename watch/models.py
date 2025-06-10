@@ -1,8 +1,8 @@
-from django.db import models
-from django.utils.text import slugify
-from django.urls import reverse
-from django.core.validators import RegexValidator
 from django.core.validators import MinValueValidator
+from django.db import models
+from django.urls import reverse
+from django.utils.text import slugify
+
 from watch.services.exchange import get_usd_rate
 
 
@@ -47,6 +47,7 @@ class Product(models.Model):
         if self.price_usd is not None:
             return round(self.price_usd * get_usd_rate())
         return None
+
     # CONDITION_CHOICES = [
     #     ('new', 'Абсолютно новое'),
     #     ('refurb', 'Изделие "с пробегом"')
@@ -61,16 +62,11 @@ class Product(models.Model):
     #     ("T", "Тюнинг"),
     # ]
 
-
     # Связи
     brand = models.ForeignKey(
-        Brand,
-        on_delete=models.CASCADE,
-        related_name='products',
-        verbose_name="Бренд"
+        Brand, on_delete=models.CASCADE, related_name="products", verbose_name="Бренд"
     )
     cities = models.ManyToManyField(City, related_name="products", blank=True)
-
 
     # Основная информация
     title = models.CharField(max_length=255, verbose_name="Название")
@@ -105,7 +101,7 @@ class Product(models.Model):
         null=True,
         blank=True,
         validators=[MinValueValidator(0)],
-        verbose_name="Цена (USD)"
+        verbose_name="Цена (USD)",
     )
 
     # special_offer = models.CharField(
@@ -119,34 +115,32 @@ class Product(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['title']),  # Добавлен индекс для поиска по названию
+            models.Index(fields=["title"]),  # Добавлен индекс для поиска по названию
         ]
 
     def __str__(self):
         return f"{self.brand.name} {self.title}"
 
     def get_absolute_url(self):
-        return reverse('product_detail', kwargs={'slug': self.slug})
+        return reverse("product_detail", kwargs={"slug": self.slug})
+
 
 class FilterPreset(models.Model):
-    name = models.CharField(
-        max_length=100,
-        verbose_name="Название фильтра"
-    )
+    name = models.CharField(max_length=100, verbose_name="Название фильтра")
 
     # Условия фильтрации
     brand = models.ManyToManyField(
         Brand,
         blank=True,
-        related_name='filter_presets',  # Добавлено
-        verbose_name="Бренды"
+        related_name="filter_presets",  # Добавлено
+        verbose_name="Бренды",
     )
 
     in_stock = models.ManyToManyField(
         City,
         blank=True,
-        related_name='filter_presets',  # Добавлено
-        verbose_name="Наличие в городах"
+        related_name="filter_presets",  # Добавлено
+        verbose_name="Наличие в городах",
     )
 
     # condition = models.CharField(
@@ -163,18 +157,12 @@ class FilterPreset(models.Model):
     # )
 
     # Метаданные
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Дата создания"
-    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
-    is_active = models.BooleanField(
-        default=True,
-        verbose_name="Активный фильтр"
-    )
+    is_active = models.BooleanField(default=True, verbose_name="Активный фильтр")
 
     class Meta:
-        ordering = ['-created_at']  # Сортировка по дате создания
+        ordering = ["-created_at"]  # Сортировка по дате создания
 
     def __str__(self):
         return self.name

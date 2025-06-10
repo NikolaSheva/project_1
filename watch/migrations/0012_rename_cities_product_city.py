@@ -6,13 +6,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('watch', '0011_rename_city_filterpreset_in_stock_and_more'),
+        ("watch", "0011_rename_city_filterpreset_in_stock_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='product',
-            old_name='cities',
-            new_name='city',
+            model_name="product",
+            old_name="cities",
+            new_name="city",
         ),
     ]

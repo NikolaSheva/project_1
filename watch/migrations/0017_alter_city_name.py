@@ -7,13 +7,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('watch', '0016_remove_city_slug'),
+        ("watch", "0016_remove_city_slug"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='city',
-            name='name',
-            field=models.CharField(max_length=50, unique=True, validators=[django.core.validators.RegexValidator('^[^:]+$', 'Название города не должно содержать двоеточий')]),
+            model_name="city",
+            name="name",
+            field=models.CharField(
+                max_length=50,
+                unique=True,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        "^[^:]+$", "Название города не должно содержать двоеточий"
+                    )
+                ],
+            ),
         ),
     ]

@@ -6,13 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('watch', '0004_filterpreset_condition_filterpreset_in_stock_and_more'),
+        ("watch", "0004_filterpreset_condition_filterpreset_in_stock_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='product',
-            name='condition',
-            field=models.CharField(blank=True, choices=[('new', 'Абсолютно новое'), ('refurb', 'Изделие "с пробегом"')], max_length=20, null=True, verbose_name='Состояние'),
+            model_name="product",
+            name="condition",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("new", "Абсолютно новое"),
+                    ("refurb", 'Изделие "с пробегом"'),
+                ],
+                max_length=20,
+                null=True,
+                verbose_name="Состояние",
+            ),
         ),
     ]
