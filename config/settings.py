@@ -9,16 +9,26 @@ import sys
 from pathlib import Path
 
 import dj_database_url
-import environ
-# from dotenv import load_dotenv  # Для загрузки переменных окружения
 from loguru import logger
 
+import environ
+# from dotenv import load_dotenv  # Для загрузки переменных окружения
+
+# Инициализация окружения ДО использования
+env = environ.Env(
+    # Установите дефолтные значения
+    DEBUG=(bool, True),
+)
 # Настройка базовой директории
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Инициализация окружения
-env = environ.Env(DEBUG=(bool, False))
-environ.Env.read_env(BASE_DIR / ".env")  # <-- важно
+# Чтение .env файла
+env.read_env(BASE_DIR / ".env")
+# env = environ.Env(DEBUG=(bool, False))
+#DEBUG = env.bool("DEBUG", default=True) 
+DEBUG = True
+# environ.Env.read_env(BASE_DIR / ".env")  # <-- важно
 TEMPLATE_DIR = BASE_DIR / "templates"
 
 # с fallback значениями:
@@ -29,14 +39,25 @@ DEBUG = env.bool("DEBUG", default=False)
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
+    "0.0.0.0",
+    "192.168.1.139",
     ".ngrok-free.app",
-    ".ngrok.io",  # разрешает все поддомены ngrok
+    ".ngrok-free.dev",
+    "vorticose-reta-knurled.ngrok-free.dev",
+    "188.226.37.12",                                    # ваш публичный IP
+    "project1.188.226.37.12.nip.io",                   # ваш ingress домен
+    ".nip.io",                                          # все nip.io домены
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://192.168.1.48:8000",
-    "https://*.ngrok.io",
+    "http://localhost:10000",
+    "http://127.0.0.1:10000",
     "https://*.ngrok-free.app",
+    "https://*.ngrok-free.dev",
+    "https://vorticose-reta-knurled.ngrok-free.dev",
+    "http://188.226.37.12",                             # публичный IP
+    "http://project1.188.226.37.12.nip.io",             # ingress домен
+    "http://*.nip.io",                                  # все nip.io домены
 ]
 # Render проксирует HTTPS, и без этого Django может думать, что это HTTP
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -60,10 +81,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.humanize",
     # Third-party apps
+    # "crispy_forms",
+    # "crispy_bootstrap5",
     "crispy_forms",
-    "crispy_bootstrap5",
+    "crispy_tailwind",
     "corsheaders",
+    "django_filters",
     # Local apps
     "watch.apps.WatchConfig",
 ]
@@ -76,7 +101,7 @@ CORS_ALLOWED_ORIGINS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    #'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -112,12 +137,19 @@ WSGI_APPLICATION = "config.wsgi.application"
 #     DATABASES = {
 #         'default': env.db('DATABASE_URL')
 #     }
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default="sqlite:///" + str(BASE_DIR / "db.sqlite3"),
+#         conn_max_age=600,
+#         ssl_require=not DEBUG,
+#     )
+# }
+
 DATABASES = {
-    "default": dj_database_url.config(
-        default="sqlite:///" + str(BASE_DIR / "db.sqlite3"),
-        conn_max_age=600,
-        ssl_require=not DEBUG,
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 # Replace the SQLite DATABASES configuration with PostgreSQL:
@@ -160,6 +192,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 
+
 # This production code might break development mode, so we check whether we're in DEBUG mode
 if not DEBUG:
     # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
@@ -167,14 +200,17 @@ if not DEBUG:
 
     # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
     # and renames the files with unique names for each version to support long-term caching
+   
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # Media files
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # Crispy Forms
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+CRISPY_TEMPLATE_PACK = "tailwind"
+# CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+# CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -222,3 +258,29 @@ CACHES = (
 # SECURE_HSTS_SECONDS = 31536000  # 1 year
 # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 # SECURE_HSTS_PRELOAD = True
+
+
+
+
+# config/settings.py
+
+# Контакты для Telegram постов
+CONTACTS = [
+    {"address": "<b>Наши контакты:</b> @Genesislab"},
+    {
+        "address": "<b>Екатеринбург, ул. Маршала Жукова 13</b>",
+        "tel": "+7(982)663-99-99",
+        "wa_link": "https://wa.me/79826639999"
+    },
+    {
+        "address": '<b>Екатеринбург, ул. Сакко и Ванцетти 74</b>, Торговая галерея "LUXURY"',
+        "tel": "+7(982)699-66-66",
+        "wa_link": "https://wa.me/79826996666"
+    }
+]
+
+
+# Настройки для парсера
+MAX_PHOTOS = 10
+CUSTOM_PHOTOS = []  # Список URL кастомных фото
+CUSTOM_VIDEOS = []  # Список URL кастомных видео

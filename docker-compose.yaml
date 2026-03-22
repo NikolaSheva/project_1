@@ -1,0 +1,22 @@
+services:
+  web:
+    image: quay.io/nikolasheva/project1:latest
+    container_name: project1_web
+    restart: unless-stopped
+    ports:
+      - "10000:10000"
+    volumes:
+      - ./db.sqlite3:/app/db.sqlite3  # монтируем файл БД для сохранения данных
+      - ./templates:/app/templates
+      - ./static:/app/static     # монтируем шаблоны для разработки
+      - project1_data:/app/data
+    environment:
+      - DEBUG=1
+      - DJANGO_SETTINGS_MODULE=config.settings
+      - DATABASE_URL=sqlite:///db.sqlite3
+      - ALLOWED_HOSTS=*
+      - CSRF_TRUSTED_ORIGINS=http://localhost:10000,http://127.0.0.1:10000
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:10000 --workers 3 --threads 2
+
+volumes:
+  project1_data:

@@ -17,7 +17,8 @@ class Command(BaseCommand):
         hash_file = os.path.join(base_dir, ".initial_data_hash")
 
         def compute_hash():
-            hash_md5 = hashlib.md5()
+            hash_md5 = hashlib.sha256() 
+            # hash_md5 = hashlib.md5()
             for fixture in fixtures:
                 path = os.path.join(base_dir, fixture)
                 if os.path.exists(path):

@@ -201,64 +201,54 @@ railway.json
 render.yaml
 railway-vars.json
 
+# IDE
+.idea/
+.vscode/
 
-# Секреты и конфиги
-.env
-.env.local
-.env.telegram
+# Secrets
 auth.json
-render.yaml
+one_watch.json
 railway.json
 railway-vars.json
-docker-compose.yaml
+render.yaml
 
-# База данных
-db.sqlite3
-db.sqlite3.backup
-*.sqlite3
-
-# Кэш Python
+# Python cache
 __pycache__/
 *.pyc
 
-# Логи
-*.log
-logs/
+# macOS
+.DS_Store
+**/.DS_Store
 
 # Node modules
 node_modules/
-package*.json
 
-# Временные файлы
-*.tmp
-*.bak
-*.backup
-nohup.out
-*.pid
-
-# Бинарные файлы
-skaffold
-kubeseal
-bfg-*.jar
-
-# Отладочные файлы
-debug_*.html
-debug_*.png
-check_*.py
-test_*.py
-migrate_data.py
-card_debug.html
-
-# Вывод парсинга
-output/
-*.json
-*.txt
-
-# Статика (сгенерированная)
+# Static files
 staticfiles/
+static/src/
 static/css/tailwind.css
 tailwind.config.js
-static/src/
-static/test.html.idea/
-.DS_Store
-**/.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Database
+*.sqlite3
+*.sqlite3-*
+
+# Output
+output/
+*.json
+!package.json
+!package-lock.json
+
+
+# Python compiled files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*/__pycache__/
+*/*/__pycache__/
+*/*/*/__pycache__/

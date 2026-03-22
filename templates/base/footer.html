@@ -1,4 +1,19 @@
-<footer class="mt-5 py-3 bg-light">  <!-- Добавлен отступ и светлый фон -->
+<footer class="mt-8 py-4 bg-gray-100 border-t border-gray-200">
+    <div class="container mx-auto px-4">
+        <p class="text-center text-xs text-gray-600 mb-0">
+            &copy; {% now "d F Y" %} By NickSheva. Все права защищены.
+            <span class="block sm:inline">
+                <span class="hidden sm:inline mx-2 text-gray-400">|</span>
+                Последнее обновление: {% now "H:i" %}
+            </span>
+        </p>
+    </div>
+</footer>
+
+
+
+
+{% comment %} <footer class="mt-5 py-3 bg-light">  <!-- Добавлен отступ и светлый фон -->
     <div class="container">  <!-- Ограничение ширины и центрирование -->
         <p class="text-center mb-0" style="font-size: 0.8rem; color: #6c757d;">  <!-- Улучшенные стили -->
             &copy; {% now "d F Y" %} By NickSheva. Все права защищены.
@@ -8,4 +23,4 @@
             </span>
         </p>
     </div>
-</footer>
+</footer> {% endcomment %}

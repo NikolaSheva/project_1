@@ -1,0 +1,25 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: project1
+build:
+  artifacts:
+    - image: quay.io/nikolasheva/project1
+      docker:
+        dockerfile: Containerfile #Dockerfile
+  local:
+    push: false  # ИЗМЕНИТЬ с true на false
+    useDockerCLI: true
+
+ 
+manifests:
+  rawYaml:
+    - k8s/project1-deployment.yaml
+
+
+portForward:
+  - resourceType: deployment
+    resourceName: project1-deployment
+    namespace: project1
+    port: 10000
+    localPort: 10000

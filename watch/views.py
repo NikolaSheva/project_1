@@ -1,8 +1,12 @@
+# watch/views.py
 from django.http import JsonResponse
-from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic import DetailView, TemplateView
+from django_filters.views import FilterView
+from django.core.paginator import Paginator
+from django.shortcuts import render
 
-from watch.forms import ProductFilterForm
-from watch.models import Brand, Product
+from watch.filters import ProductFilter
+from watch.models import Brand, Product, City
 from watch.services.exchange import get_usd_rate
 
 
@@ -11,50 +15,36 @@ class Home(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["today"] = ProductFilterForm()
         return context
 
 
-class ProductListView(ListView):
+class ProductListView(FilterView):
     model = Product
+    filterset_class = ProductFilter
     template_name = "watch/product_list.html"
-    # context_object_name = 'page_object_list'
-    paginate_by = 180
+    context_object_name = 'products'  # Не используем page_obj как имя контекста
+    paginate_by = 50
+    ordering = ['-created_at']
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        print("⏳ ДО фильтров:", queryset.count())
-        self.form = ProductFilterForm(self.request.GET)
-
-        if self.request.GET and self.form.is_valid():
-            condition = self.form.cleaned_data.get("condition")
-            special_offer = self.form.cleaned_data.get("special_offer")
-            cities = self.form.cleaned_data.get("cities")
-            brand = self.form.cleaned_data.get("brand")
-
-            if condition:
-                queryset = queryset.filter(condition__in=condition)
-
-            if special_offer:
-                queryset = queryset.filter(special_offer__in=special_offer)
-
-            if cities:
-                queryset = queryset.filter(cities__in=cities).distinct()
-
-            if brand:
-                queryset = queryset.filter(brand__in=brand)
-
-        print("GET:", self.request.GET)
-        print("is_valid:", self.form.is_valid())
-        print("cleaned_data:", self.form.cleaned_data)
-        print("✅ ПОСЛЕ фильтров:", queryset.count())
-        return queryset
-        # return queryset.order_by('created_at')
+        return queryset.distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form"] = self.form
-        context["usd_rate"] = get_usd_rate()  # добавляем курс доллара
+        
+        # FilterView автоматически создает page_obj в контексте
+        # но мы также передаем form для фильтра
+        context["form"] = self.filterset.form
+        context["usd_rate"] = get_usd_rate()
+        context["total_count"] = self.filterset.qs.count()
+        
+        # Отладка
+        print(f"Контекст содержит: {list(context.keys())}")
+        if 'page_obj' in context:
+            print(f"page_obj есть! Тип: {type(context['page_obj'])}")
+            print(f"page_obj.paginator: {context['page_obj'].paginator}")
+        
         return context
 
 
@@ -69,3 +59,9 @@ class BrandDetail(DetailView):
 def usd_rate_api(request):
     rate = get_usd_rate()
     return JsonResponse({"rate": round(rate, 2)})
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "watch/product_detail.html"
+    context_object_name = "product"

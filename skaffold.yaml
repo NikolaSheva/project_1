@@ -1,0 +1,21 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: project1
+build:
+  artifacts:
+    - image: quay.io/nikolasheva/project1
+      docker:
+        dockerfile: Containerfile
+  tagPolicy:
+    customTemplate:
+      template: "latest"
+  local:
+    push: false
+    tryImportMissing: true
+manifests:
+  rawYaml:
+    - k8s/project1-k8s.yaml
+    - k8s/sealed-secret.yaml
+deploy:
+  kubectl: {}

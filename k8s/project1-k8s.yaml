@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: project1-pod
+  namespace: project1
+  labels:
+    app: project1-pod
+spec:
+  imagePullSecrets:
+  - name: regcred
+  containers:
+  - name: project1
+    image: quay.io/nikolasheva/project1:latest
+    command:
+    - /app/.venv/bin/python
+    - manage.py
+    - runserver
+    - 0.0.0.0:10000
+    ports:
+    - containerPort: 10000
+    env:
+      valueFrom:
+        secretKeyRef:
+          name: project1-secrets
+          key: django-key
+    - name: DATABASE_URL
+      value: "sqlite:////app/data/db.sqlite3"
+    - name: DEBUG
+      value: "1"
+    - name: ALLOWED_HOSTS
+      value: "localhost,127.0.0.1,10.43.158.253,project1-service,project1-pod,0.0.0.0,*,10.42.1.19"  # 👈 ЗНАЧЕНИЕ ДОБАВЛЕНО
+    volumeMounts:
+    - name: project1-db
+      mountPath: /app/db.sqlite3
+    - name: project1-data
+      mountPath: /app/data
+    # - name: project1-templates   # ЗАКОММЕНТИРОВАНО — код внутри образа
+    #   mountPath: /app/templates
+    # - name: project1-watch        # ЗАКОММЕНТИРОВАНО — код внутри образа
+    #   mountPath: /app/watch
+    # - name: project1-static       # ЗАКОММЕНТИРОВАНО — код внутри образа
+    #   mountPath: /app/static
+  volumes:
+  - name: project1-db
+    hostPath:
+      path: /home/sheva/mydata/project_1/db.sqlite3
+      type: File
+  - name: project1-data
+    hostPath:
+      path: /home/sheva/mydata/project_1/data
+      type: Directory
+  # - name: project1-templates      # ЗАКОММЕНТИРОВАНО
+  #   hostPath:
+  #     path: /home/sheva/mydata/project_1/templates
+  #     type: Directory
+  # - name: project1-watch           # ЗАКОММЕНТИРОВАНО
+  #   hostPath:
+  #     path: /home/sheva/mydata/project_1/watch
+  #     type: Directory
+  # - name: project1-static          # ЗАКОММЕНТИРОВАНО
+  #   hostPath:
+  #     path: /home/sheva/mydata/project_1/static
+  #     type: Directory

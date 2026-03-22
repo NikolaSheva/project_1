@@ -1,25 +1,75 @@
+<!-- templates/base/navbar.html -->
 {% load static %}
 
-<!-- Навигация -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark  mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">
-                <img src="{% static 'img/logo_ru.svg' %}" alt="Logo" height="70">
+<!-- Навигация с Tailwind CSS -->
+<nav class="bg-gray-900 border-b border-yellow-500/30 shadow-lg sticky top-0 z-50 mb-6">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center h-20">
+            <!-- Логотип -->
+            <a href="{% url 'home' %}" class="flex items-center">
+                <img src="{% static 'img/logo_ru.svg' %}" alt="Logo" class="h-16 w-auto">
             </a>
-<!--            <a class="navbar-brand" href="{% url 'home' %}"></a>-->
-<!--            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">-->
-<!--                <span class="navbar-toggler-icon"></span>-->
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href='https://lombard-perspectiva.ru'>Часовой магазин</a>
-                    </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'product_list' %}">Каталог</a>
-                    </li>
-                </ul>
+            <!-- Десктопное меню -->
+            <div class="hidden lg:flex lg:items-center lg:space-x-4">
+                <a href="https://lombard-perspectiva.ru" 
+                   class="text-gray-300 hover:text-yellow-400 px-4 py-2 text-sm font-medium rounded-lg border border-transparent hover:border-yellow-500/50 transition-all duration-300">
+                    Часовой магазин
+                </a>
+                <a href="{% url 'product_list' %}" 
+                   class="bg-yellow-500 text-gray-900 hover:bg-yellow-400 px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 shadow-lg shadow-yellow-500/30">
+                    Каталог
+                </a>
+            </div>
+
+            <!-- Мобильное меню кнопка -->
+            <button class="lg:hidden text-yellow-500 hover:text-yellow-400 focus:outline-none" id="menu-toggle">
+                <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Мобильное меню (скрыто по умолчанию) -->
+        <div class="hidden lg:hidden pb-4" id="mobile-menu">
+            <div class="flex flex-col space-y-2">
+                <a href="https://lombard-perspectiva.ru" 
+                   class="text-gray-300 hover:text-yellow-400 hover:bg-gray-800 px-4 py-3 rounded-lg text-base font-medium transition-all duration-300">
+                    Часовой магазин
+                </a>
+                <a href="{% url 'product_list' %}" 
+                   class="bg-yellow-500 text-gray-900 hover:bg-yellow-400 px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 text-center">
+                    Каталог
+                </a>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
+
+<!-- JavaScript для мобильного меню -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Закрыть меню при клике на ссылку
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    }
+
+    // Закрыть меню при изменении размера окна
+    window.addEventListener('resize', function() {
+        if (window.innerWidth >= 1024) {
+            mobileMenu.classList.add('hidden');
+        }
+    });
+});
+</script>

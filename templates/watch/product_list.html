@@ -2,107 +2,304 @@
 {% load static %}
 {% load currency_tags %}
 {% load crispy_forms_tags %}
-{% block content %}
+{% load humanize %}
 
-<div class="container mt-5">
-    <div class="row">
+{% block content %}
+<div class="container mx-auto mt-5 px-4">
+    <div class="flex flex-wrap -mx-4">
         <!-- Фильтр -->
-        <div class="col-lg-3 col-md-4 mb-4">
-            <div class="sticky-top" style="top: 20px;">
-                <h1 class="h4 mb-3">Фильтр товаров</h1>
-                <form method="get" class="bg-light p-3 rounded">
-                    {{ form|crispy }}
-                    <button type="submit" class="btn btn-primary btn-block">Применить</button>
+        <div class="w-full lg:w-1/4 md:w-1/3 px-4 mb-4">
+            <div class="sticky top-5">
+                <h1 class="text-lg font-semibold mb-3">Фильтр товаров</h1>
+                <form method="get" class="bg-gray-100 p-4 rounded-lg">
+                    {{ filter.form|crispy }}
+                    <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                        Применить
+                    </button>
                 </form>
             </div>
         </div>
 
         <!-- Список товаров -->
-        <div class="col-lg-9 col-md-8">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="h5 text-muted">
+        <div class="w-full lg:w-3/4 md:w-2/3 px-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-sm text-gray-500">
                     Курс доллара: <span id="live-usd-rate"
-                                        class="text-dark fw-bold">1 USD ≈ {{ usd_rate|floatformat:2 }} ₽</span>
-                    <small class="d-block text-muted-50" id="rate-update-time"></small>
+                                        class="text-gray-900 font-bold">1 USD ≈ {{ usd_rate|floatformat:2 }} ₽</span>
+                    <small class="block text-gray-400 text-xs" id="rate-update-time"></small>
                 </h2>
-{#                <h2 class="h5 text-muted">#}
-{#                    Курс доллара: <span class="text-dark fw-bold">1 USD ≈ {{ usd_rate|floatformat:2 }} ₽</span>#}
-{#                </h2>#}
             </div>
-            <h4>Каталог часов</h4>
-            <p>Всего товаров (queryset): {{ page_obj.paginator.count }}</p>
+            
+            <h4 class="text-xl font-semibold">Каталог часов</h4>
+            <p class="text-gray-600 mb-4">Всего товаров: {{ page_obj.paginator.count }}</p>
+            
             {% if page_obj %}
-                <div class="row">
+                <div class="flex flex-wrap -mx-2">
                     {% for item in page_obj %}
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-4">
-                        <div class="card h-100 shadow-sm">
-                            {% if item.image_url %}
-                            <a data-fancybox="product-gallery"
-                               href="{{ item.image_url }}"
-                               data-caption="{{ item.title }}">
-                                <img src="{{ item.image_url }}"
-                                     class="card-img-top p-3"
-                                     alt="{{ item.title }}"
-                                     style="height: 200px; object-fit: contain; background: #f8f9fa;">
-                            </a>
-                            {% else %}
-                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                    <span class="text-muted">Нет изображения</span>
-                                </div>
-                            {% endif %}
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">{{ item.title|default:"Название не указано" }}</h5>
-                                <p class="card-text text-muted small">{{ item.brand.name|default:"Неизвестно" }}</p>
-                                <p class="card-text font-weight-bold">
-                                    {% if item.price_usd %}
-                                        {{ item.price_usd|format_currency:"USD" }} (≈ {{ item.price_usd|usd_to_rub|format_currency:"RUB" }})
-                                    {% else %}
-                                        <span class="text-danger">Цена по запросу</span>
+                    <div class="w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 px-2 mb-4">
+                        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
+                            <!-- Фото с индикатором количества -->
+                            <div class="relative">
+                                {% if item.image_url %}
+                                <a data-fancybox="gallery-{{ item.id }}" 
+                                href="{{ item.image_url }}"
+                                data-caption="{{ item.title }}"
+                                class="block p-3 cursor-pointer">
+                                    <img src="{{ item.image_url }}"
+                                        class="w-full h-48 object-contain bg-gray-50 hover:scale-105 transition-transform duration-300"
+                                        alt="{{ item.title }}">
+                                    
+                                    <!-- Значок с количеством фото -->
+                                    {% with total_photos=item.additional_images.count|add:"1" %}
+                                    {% if total_photos > 1 %}
+                                    <div class="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <span>{{ total_photos }}</span>
+                                    </div>
                                     {% endif %}
-                                </p>
-                                <div class="mt-auto">
+                                    {% endwith %}
+                                </a>
+                                
+                                <!-- Добавляем ссылки на дополнительные фото для Fancybox -->
+                                {% for image in item.additional_images.all %}
+                                <a data-fancybox="gallery-{{ item.id }}"
+                                href="{{ image.image_url }}"
+                                data-caption="{{ item.title }} - фото {{ forloop.counter|add:1 }}"
+                                class="hidden"></a>
+                                {% endfor %}
+                                
+                                {% else %}
+                                <div class="bg-gray-100 flex items-center justify-center h-48">
+                                    <span class="text-gray-400">Нет изображения</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Информация о товаре -->
+                            <div class="p-3 flex flex-col flex-grow">
+                                <h5 class="font-medium text-sm mb-1 line-clamp-2">{{ item.brand.name|default:"Название не указано" }}</h5>
+                                
+                                <!-- Модель -->
+                                {% if item.model %}
+                                <div class="mb-1">
+                                    <span class="text-xs font-medium text-gray-600">Модель:</span>
+                                    <span class="text-xs text-gray-800">{{ item.model|truncatechars:20 }}</span>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Референс -->
+                                {% if item.ref %}
+                                <div class="mb-1">
+                                    <span class="text-xs font-medium text-gray-600">Референс:</span>
+                                    <span class="text-xs text-gray-800 font-mono">{{ item.ref|truncatechars:20 }}</span>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Состояние -->
+                                {% if item.condition_detail %}
+                                <div class="mb-1">
+                                    <span class="text-xs font-medium text-gray-600">Состояние:</span>
+                                    <span class="text-xs px-1.5 py-0.5 rounded 
+                                        {% if 'нов' in item.condition_detail|lower %}bg-green-100 text-green-800
+                                        {% elif 'пробег' in item.condition_detail|lower %}bg-yellow-100 text-yellow-800
+                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        {{ item.condition_detail }}
+                                    </span>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Город -->
+                                {% if item.cities.all %}
+                                <div class="mb-1">
+                                    <span class="text-xs font-medium text-gray-600">📍 Город:</span>
+                                    <span class="text-xs text-blue-600">
+                                        {% for city in item.cities.all %}
+                                            {{ city.name }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Характеристики - компактно -->
+                                <div class="grid grid-cols-2 gap-1 mt-2 text-xs">
+                                    {% if item.case_material %}
+                                    <div class="bg-gray-50 p-1 rounded">
+                                        <span class="font-medium text-gray-700">Корпус:</span>
+                                        <span class="block text-gray-600 truncate" title="{{ item.case_material }}">{{ item.case_material|truncatechars:12 }}</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if item.strap_material %}
+                                    <div class="bg-gray-50 p-1 rounded">
+                                        <span class="font-medium text-gray-700">Ремешок:</span>
+                                        <span class="block text-gray-600 truncate" title="{{ item.strap_material }}">{{ item.strap_material|truncatechars:12 }}</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if item.movement_type %}
+                                    <div class="bg-gray-50 p-1 rounded">
+                                        <span class="font-medium text-gray-700">Механизм:</span>
+                                        <span class="block text-gray-600 truncate" title="{{ item.movement_type }}">{{ item.movement_type|truncatechars:12 }}</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if item.glass %}
+                                    <div class="bg-gray-50 p-1 rounded">
+                                        <span class="font-medium text-gray-700">Стекло:</span>
+                                        <span class="block text-gray-600 truncate" title="{{ item.glass }}">{{ item.glass|truncatechars:12 }}</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if item.water_resistance %}
+                                    <div class="bg-gray-50 p-1 rounded">
+                                        <span class="font-medium text-gray-700">Водозащита:</span>
+                                        <span class="block text-gray-600">{{ item.water_resistance }}</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if item.case_diameter %}
+                                    <div class="bg-gray-50 p-1 rounded">
+                                        <span class="font-medium text-gray-700">Диаметр:</span>
+                                        <span class="block text-gray-600">{{ item.case_diameter }}</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if item.dial_color %}
+                                    <div class="bg-gray-50 p-1 rounded col-span-2">
+                                        <span class="font-medium text-gray-700">Циферблат:</span>
+                                        <span class="block text-gray-600 truncate" title="{{ item.dial_color }}">{{ item.dial_color|truncatechars:25 }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Миниатюры дополнительных фото -->
+                                {% if item.additional_images.all %}
+                                <div class="flex flex-wrap gap-1 mt-2">
+                                    {% for image in item.additional_images.all|slice:":3" %}
+                                    <a data-fancybox="gallery-{{ item.id }}" 
+                                       href="{{ image.image_url }}"
+                                       data-caption="{{ item.title }} - фото {{ forloop.counter|add:1 }}"
+                                       class="block w-8 h-8 overflow-hidden rounded border border-gray-200 hover:opacity-80 transition">
+                                        <img src="{{ image.image_url }}" 
+                                             class="w-full h-full object-cover"
+                                             alt="фото {{ forloop.counter|add:1 }}">
+                                    </a>
+                                    {% endfor %}
+                                    {% if item.additional_images.count > 3 %}
+                                    <span class="text-xs text-gray-500 ml-1">+{{ item.additional_images.count|add:"-3" }}</span>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Цена -->
+                                <div class="mt-auto pt-2">
+                                    <p class="font-bold text-sm mb-2">
+                                        {% if item.price_usd %}
+                                            {{ item.price_usd|floatformat:0|intcomma }} $ 
+                                            <span class="text-xs text-gray-500 font-normal">
+                                                (≈ {{ item.price_usd|usd_to_rub|floatformat:0|intcomma }} ₽)
+                                            </span>
+                                        {% else %}
+                                            <span class="text-red-500 text-xs">Цена по запросу</span>
+                                        {% endif %}
+                                    </p>
+                                    
                                     <a href="{{ item.url }}"
-                                       class="btn btn-outline-primary btn-sm"
-                                       target="_blank">Подробнее</a>
+                                    class="inline-block w-full text-center bg-blue-500 text-white text-xs px-3 py-2 rounded hover:bg-blue-600 transition"
+                                    target="_blank">
+                                        Подробнее
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
-
+                
                 <!-- Пагинация -->
-                {% include "watch/pagination.html" with page_obj=page_obj request=request %}
+                {% include "watch/pagination_tailwind.html" with page_obj=page_obj request=request %}
             {% else %}
-                <div class="alert alert-info">
+                <div class="bg-blue-50 text-blue-700 p-4 rounded-lg">
                     Ничего не найдено по выбранным фильтрам.
                 </div>
             {% endif %}
         </div>
     </div>
 </div>
+
+<!-- ОТЛАДКА (только если debug=True) -->
+{% if debug %}
+<div style="background: #f0f0f0; padding: 10px; margin: 10px; border: 2px solid red; border-radius: 5px;">
+    <h3 class="font-bold text-lg mb-2">🔍 Отладка первого товара:</h3>
+    {% with first_item=page_obj.0 %}
+        <p><strong>Товар:</strong> {{ first_item.title }}</p>
+        <p><strong>ID:</strong> {{ first_item.id }}</p>
+        <p><strong>Доп. фото count:</strong> {{ first_item.additional_images.count }}</p>
+        <p><strong>case_material:</strong> "{{ first_item.case_material }}"</p>
+        <p><strong>strap_material:</strong> "{{ first_item.strap_material }}"</p>
+        <p><strong>movement_type:</strong> "{{ first_item.movement_type }}"</p>
+        <p><strong>glass:</strong> "{{ first_item.glass }}"</p>
+        <p><strong>water_resistance:</strong> "{{ first_item.water_resistance }}"</p>
+        <p><strong>case_diameter:</strong> "{{ first_item.case_diameter }}"</p>
+        <p><strong>dial_color:</strong> "{{ first_item.dial_color }}"</p>
+    {% endwith %}
+</div>
+{% endif %}
+
+<style>
+    .grid {
+        display: grid;
+        gap: 0.25rem;
+    }
+    .truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
 {% endblock %}
 
 {% block scripts %}
 {{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Fancybox.bind('[data-fancybox^="gallery-"]', {
+            Thumbs: {
+                autoStart: true,
+            },
+            Toolbar: {
+                display: {
+                    left: ["infobar"],
+                    middle: [
+                        "zoomIn",
+                        "zoomOut",
+                        "toggle1to1",
+                        "rotateCCW",
+                        "rotateCW",
+                        "flipX",
+                        "flipY",
+                    ],
+                    right: ["slideshow", "thumbs", "close"],
+                },
+            },
+            Carousel: {
+                transition: "fade",
+            },
+            caption: function(fancybox, slide) {
+                return slide.caption || '';
+            }
+        });
+    });
+</script>
 <script src="{% static 'js/exchangeRate.js' %}"></script>
 {% endblock %}
-{#{% block scripts %}#}
-{#{{ block.super }}#}
-{#<!-- Fancybox JS -->#}
-{#<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>#}
-{#<script>#}
-{#  // Инициализация Fancybox#}
-{#  Fancybox.bind("[data-fancybox]", {#}
-{#    // Настройки можно добавить здесь#}
-{#    Thumbs: false,#}
-{#    Toolbar: {#}
-{#      display: {#}
-{#        left: [],#}
-{#        middle: [],#}
-{#        right: ["close"],#}
-{#      },#}
-{#    },#}
-{#  });#}
-{#</script>#}
-{#{% endblock %}#}

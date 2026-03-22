@@ -1,0 +1,80 @@
+{% load static %}
+
+<!-- Навигация с темной темой и акцентом -->
+<nav class="bg-black bg-opacity-90 backdrop-blur-sm border-b border-yellow-500/30 sticky top-0 z-50 mb-6">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center py-3">
+            <!-- Логотип -->
+            <a href="{% url 'home' %}" class="flex items-center">
+                <img src="{% static 'img/logo_ru.svg' %}" alt="Logo" class="h-16 w-auto">
+            </a>
+
+            <!-- Мобильное меню кнопка -->
+            <button class="lg:hidden text-yellow-500 hover:text-yellow-400 focus:outline-none" id="navbar-toggler">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+
+            <!-- Навигационные ссылки -->
+            <div class="hidden lg:flex lg:items-center lg:space-x-4" id="navbarNav">
+                <a href="https://lombard-perspectiva.ru" 
+                   class="text-gray-300 hover:text-yellow-400 px-4 py-2 text-sm font-medium border border-transparent hover:border-yellow-500/50 rounded-lg transition-all">
+                    Часовой магазин
+                </a>
+                <a href="{% url 'product_list' %}" 
+                   class="bg-yellow-500 text-black px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-yellow-400 transition-all shadow-lg shadow-yellow-500/30">
+                    Каталог
+                </a>
+            </div>
+        </div>
+        
+        <!-- Мобильное меню -->
+        <div class="hidden lg:hidden pb-3" id="mobileMenu">
+            <a href="https://lombard-perspectiva.ru" 
+               class="block text-gray-300 hover:text-yellow-400 hover:bg-gray-900 px-3 py-2 rounded-md text-base font-medium transition">
+                Часовой магазин
+            </a>
+            <a href="{% url 'product_list' %}" 
+               class="block bg-yellow-500 text-black hover:bg-yellow-400 px-3 py-2 rounded-md text-base font-medium transition">
+                Каталог
+            </a>
+        </div>
+    </div>
+</nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggler = document.getElementById('navbar-toggler');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    if (toggler && mobileMenu) {
+        toggler.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+});
+</script>
+{% comment %} {% load static %}
+
+<!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark  mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'img/logo_ru.svg' %}" alt="Logo" height="70">
+            </a>
+<!--            <a class="navbar-brand" href="{% url 'home' %}"></a>-->
+<!--            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">-->
+<!--                <span class="navbar-toggler-icon"></span>-->
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href='https://lombard-perspectiva.ru'>Часовой магазин</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'product_list' %}">Каталог</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav> {% endcomment %}

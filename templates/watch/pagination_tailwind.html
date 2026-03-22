@@ -1,0 +1,105 @@
+<nav class="flex justify-center mt-8" aria-label="Пагинация">
+    <ul class="flex space-x-1">
+        <!-- Кнопка "Первая страница" -->
+        {% if page_obj.has_previous %}
+            <li>
+                <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}page=1" 
+                   class="px-3 py-2 bg-white border border-gray-300 rounded-l hover:bg-gray-50"
+                   title="Первая страница">
+                    &laquo;&laquo;
+                </a>
+            </li>
+        {% else %}
+            <li>
+                <span class="px-3 py-2 bg-gray-100 border border-gray-300 rounded-l cursor-not-allowed">&laquo;&laquo;</span>
+            </li>
+        {% endif %}
+
+        <!-- Кнопка "Предыдущая" -->
+        {% if page_obj.has_previous %}
+            <li>
+                <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.previous_page_number }}" 
+                   class="px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50"
+                   title="Предыдущая страница">
+                    &laquo;
+                </a>
+            </li>
+        {% else %}
+            <li>
+                <span class="px-3 py-2 bg-gray-100 border border-gray-300 cursor-not-allowed">&laquo;</span>
+            </li>
+        {% endif %}
+
+        <!-- Номера страниц -->
+        {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+                <li>
+                    <span class="px-3 py-2 bg-blue-600 text-white border border-blue-600">{{ num }}</span>
+                </li>
+            {% elif num >= page_obj.number|add:-2 and num <= page_obj.number|add:2 %}
+                <li>
+                    <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}page={{ num }}" 
+                       class="px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50">
+                        {{ num }}
+                    </a>
+                </li>
+            {% elif num == 1 and page_obj.number > 3 %}
+                <!-- Показываем первую страницу если мы далеко от начала -->
+                <li>
+                    <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}page=1" 
+                       class="px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50">
+                        1
+                    </a>
+                </li>
+                {% if page_obj.number > 4 %}
+                    <li>
+                        <span class="px-3 py-2 bg-white border border-gray-300">...</span>
+                    </li>
+                {% endif %}
+            {% elif num == page_obj.paginator.num_pages and page_obj.number < page_obj.paginator.num_pages|add:-2 %}
+                <!-- Показываем последнюю страницу если мы далеко от конца -->
+                {% if page_obj.number < page_obj.paginator.num_pages|add:-3 %}
+                    <li>
+                        <span class="px-3 py-2 bg-white border border-gray-300">...</span>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.paginator.num_pages }}" 
+                       class="px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50">
+                        {{ page_obj.paginator.num_pages }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        <!-- Кнопка "Следующая" -->
+        {% if page_obj.has_next %}
+            <li>
+                <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.next_page_number }}" 
+                   class="px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50"
+                   title="Следующая страница">
+                    &raquo;
+                </a>
+            </li>
+        {% else %}
+            <li>
+                <span class="px-3 py-2 bg-gray-100 border border-gray-300 cursor-not-allowed">&raquo;</span>
+            </li>
+        {% endif %}
+
+        <!-- Кнопка "Последняя страница" -->
+        {% if page_obj.has_next %}
+            <li>
+                <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.paginator.num_pages }}" 
+                   class="px-3 py-2 bg-white border border-gray-300 rounded-r hover:bg-gray-50"
+                   title="Последняя страница">
+                    &raquo;&raquo;
+                </a>
+            </li>
+        {% else %}
+            <li>
+                <span class="px-3 py-2 bg-gray-100 border border-gray-300 rounded-r cursor-not-allowed">&raquo;&raquo;</span>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

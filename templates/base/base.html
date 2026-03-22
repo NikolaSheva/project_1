@@ -1,4 +1,46 @@
+<!-- templates/base/base.html -->
 {% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Часовой магазин{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Fancybox CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.min.css"/>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    {% include 'base/navbar.html' %}
+
+    <main class="flex-grow container mx-auto px-4 py-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'base/footer.html' %}
+
+    <!-- Fancybox JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script>
+        Fancybox.bind("[data-fancybox]", {
+            Thumbs: { autoStart: false },
+            Toolbar: { display: { left: [], middle: [], right: ["close"] } }
+        });
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+
+{% comment %} {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -24,6 +66,7 @@
             crossorigin="anonymous"></script>
 
     <!-- Fancybox JS -->
+    <!-- Fancybox JS -->
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
     <script>
         // Инициализация Fancybox для всех галерей
@@ -45,4 +88,4 @@
 
     {% block scripts %}{% endblock %}
 </body>
-</html>
+</html> {% endcomment %}
