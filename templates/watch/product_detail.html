@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block body %}
+Brands' detail page
+
+Brand Title: {{ brand_object.title }}
+
+LEVEL: {{ brand_object.get_level_display }}
+
+Assigned by :
+{% for emp in brand_object.brand.all %}
+
+{{emp.name}}: {{emp.division}}
+{% endfor %} UPDATE DELETE
+{% endblock body %}

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: project1-service
+  namespace: project1
+spec:
+  selector:
+    app: project1-pod
+  ports:
+  - port: 10000
+    targetPort: 10000
+  type: NodePort
