@@ -260,3 +260,5 @@ static/css/tailwind.css
 tailwind.config.js
 static/src/
 static/test.html.idea/
+.DS_Store
+**/.DS_Store
