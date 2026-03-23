@@ -2,7 +2,7 @@ name: Send to Telegram
 
 on:
   schedule:
-    - cron: '0 5,7,10 * * *'  # 10, 12, 14 МСК
+    - cron: '*/15 10-12 * * *'
   workflow_dispatch:
 
 jobs:
