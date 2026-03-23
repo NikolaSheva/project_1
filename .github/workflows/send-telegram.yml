@@ -2,53 +2,73 @@ name: Send to Telegram
 
 on:
   schedule:
-    - cron: '*/30 8-9 * * *'
+    - cron: '*/30 5-9 * * *'
   workflow_dispatch:
 
 jobs:
   send:
     runs-on: ubuntu-latest
     steps:
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-      
       - name: Send products to Telegram
         env:
           API_URL: ${{ secrets.NOTEBOOK_API_URL }}
           BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
         run: |
-          # Получаем товары
-          RESPONSE=$(curl -s -X POST $API_URL/api/watch/get-unsent/ \
+          echo "=== Starting workflow ==="
+          echo "API_URL: ${API_URL}"
+          
+          # Проверяем, установлены ли secrets
+          if [ -z "$API_URL" ]; then
+            echo "ERROR: NOTEBOOK_API_URL secret is not set"
+            exit 1
+          fi
+          
+          if [ -z "$BOT_TOKEN" ]; then
+            echo "ERROR: TELEGRAM_BOT_TOKEN secret is not set"
+            exit 1
+          fi
+          
+          if [ -z "$CHANNEL_ID" ]; then
+            echo "ERROR: TELEGRAM_CHANNEL_ID secret is not set"
+            exit 1
+          fi
+          
+          echo "=== Making API request ==="
+          
+          # Получаем товары с выводом ошибок
+          RESPONSE=$(curl -v -X POST "${API_URL}/api/watch/get-unsent/" \
             -H "Content-Type: application/json" \
-            -d '{"limit": 5, "min_photos": 2}')
+            -d '{"limit":1,"min_photos":2}' \
+            2>&1)
           
-          COUNT=$(echo "$RESPONSE" | jq '.count')
+          CURL_EXIT=$?
+          echo "curl exit code: $CURL_EXIT"
+          echo "=== Response ==="
+          echo "$RESPONSE"
           
-          if [ "$COUNT" -eq 0 ]; then
-            echo "✅ No products to send"
+          if [ $CURL_EXIT -ne 0 ]; then
+            echo "ERROR: curl failed with exit code $CURL_EXIT"
+            exit 1
+          fi
+          
+          # Проверяем, есть ли товары
+          if echo "$RESPONSE" | grep -q '"count": 0'; then
+            echo "No products to send"
             exit 0
           fi
           
-          echo "📦 Found $COUNT products"
+          # Проверяем, что ответ содержит валидный JSON
+          if ! echo "$RESPONSE" | grep -q '"success": true'; then
+            echo "ERROR: API returned error response"
+            exit 1
+          fi
           
-          # Отправляем каждый товар
-          echo "$RESPONSE" | jq -c '.products[]' | while read product; do
-            MESSAGE=$(echo "$product" | jq -r '.message')
-            
-            curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
-              -d "chat_id=$CHANNEL_ID" \
-              -d "text=$MESSAGE" \
-              -d "parse_mode=HTML" \
-              -d "disable_web_page_preview=true"
-            
-            # Отмечаем как отправленный
-            PRODUCT_ID=$(echo "$product" | jq '.id')
-            curl -s -X POST "$API_URL/api/watch/mark-sent/" \
-              -H "Content-Type: application/json" \
-              -d "{\"product_id\": $PRODUCT_ID}"
-            
-            sleep 1
-          done
+          echo "Found products, sending..."
           
-          echo "✅ Done"
+          # Отправляем тестовое сообщение
+          curl -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${CHANNEL_ID}" \
+            -d "text=Test from GitHub Actions at $(date)"
+          
+          echo "=== Done ==="
