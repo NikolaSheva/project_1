@@ -1,0 +1,16 @@
+name: Send to Telegram
+
+on:
+  schedule:
+    - cron: '0 5,7,10 * * *'  # 10, 12, 14 МСК
+  workflow_dispatch:
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger send
+        env:
+          API_URL: ${{ secrets.NOTEBOOK_API_URL }}
+        run: |
+          curl -X POST $API_URL/api/watch/send-unsent/
