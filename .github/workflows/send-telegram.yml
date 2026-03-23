@@ -9,10 +9,7 @@ jobs:
   send:
     runs-on: ubuntu-latest
     steps:
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y jq curl
-
-      - name: Get and send products
+      - name: Send products to Telegram
         env:
           API_URL: ${{ secrets.NOTEBOOK_API_URL }}
           BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -23,18 +20,15 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"limit":1,"min_photos":2}')
           
-          echo "Response received"
-          
-          COUNT=$(echo $RESPONSE | jq -r '.count // 0')
-          echo "Count: $COUNT"
-          
-          if [ "$COUNT" -gt 0 ]; then
-            echo "Found products"
-            # Простой тест отправки
-            MESSAGE="Test from GitHub Actions"
-            curl -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
-              -d "chat_id=$CHANNEL_ID" \
-              -d "text=$MESSAGE"
-          else
+          # Проверяем, есть ли товары (простой grep вместо jq)
+          if echo "$RESPONSE" | grep -q '"count": 0'; then
             echo "No products to send"
+            exit 0
           fi
+          
+          echo "Found products, sending..."
+          
+          # Отправляем тестовое сообщение
+          curl -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
+            -d "chat_id=$CHANNEL_ID" \
+            -d "text=Test from GitHub Actions at $(date)"
