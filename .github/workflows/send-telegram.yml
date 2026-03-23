@@ -23,12 +23,10 @@ jobs:
           COUNT=$(echo $RESPONSE | jq -r '.count')
           
           if [ "$COUNT" -gt 0 ]; then
-            # Отправляем в Telegram
             echo $RESPONSE | jq -c '.products[]' | while read product; do
               MESSAGE=$(echo $product | jq -r '.message')
               PHOTOS=$(echo $product | jq -r '.photos[]')
               
-              # Формируем медиа-группу
               MEDIA='[]'
               FIRST=1
               for PHOTO in $PHOTOS; do
@@ -41,15 +39,15 @@ jobs:
                 fi
               done
               
-              # Отправляем
               curl -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMediaGroup" \
                 -H "Content-Type: application/json" \
                 -d "{\"chat_id\":\"$CHANNEL_ID\",\"media\":$MEDIA}"
               
-              # Отмечаем отправленным
               PRODUCT_ID=$(echo $product | jq -r '.id')
               curl -X POST $API_URL/api/watch/mark-sent/ \
                 -H "Content-Type: application/json" \
                 -d "{\"product_ids\":[$PRODUCT_ID]}"
             done
+          else
+            echo "Нет товаров для отправки"
           fi
