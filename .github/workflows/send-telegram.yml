@@ -1,63 +1,33 @@
-name: Send to Telegram
+name: Test API Connection
 
 on:
-  schedule:
-    - cron: '*/30 5-9 * * *'
   workflow_dispatch:
 
 jobs:
-  send:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Send products to Telegram
+      - name: Test API
         env:
           API_URL: ${{ secrets.NOTEBOOK_API_URL }}
-          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
         run: |
-          echo "=== Starting workflow ==="
+          echo "Testing API: ${API_URL}"
           
-          # Проверяем secrets
-          if [ -z "$API_URL" ]; then
-            echo "ERROR: NOTEBOOK_API_URL secret is not set"
-            exit 1
-          fi
+          # Тест 1: Проверка DNS/сети
+          echo "=== Test 1: Ping ==="
+          ping -c 2 project1.188.226.37.12.nip.io || true
           
-          echo "=== Making API request to ${API_URL} ==="
+          # Тест 2: Проверка порта
+          echo "=== Test 2: Port check ==="
+          timeout 5 nc -zv project1.188.226.37.12.nip.io 80 || true
           
-          # Получаем товары с полным выводом (-v)
-          RESPONSE=$(curl -v -X POST "${API_URL}/api/watch/get-unsent/" \
+          # Тест 3: Простой GET
+          echo "=== Test 3: GET request ==="
+          curl -v --max-time 10 "http://project1.188.226.37.12.nip.io/products/" || true
+          
+          # Тест 4: POST с данными
+          echo "=== Test 4: POST request ==="
+          curl -v -X POST "http://project1.188.226.37.12.nip.io/api/watch/get-unsent/" \
             -H "Content-Type: application/json" \
             -d '{"limit":1,"min_photos":2}' \
-            --max-time 30 \
-            --fail \
-            --show-error \
-            2>&1)
-          
-          CURL_EXIT=$?
-          
-          echo "=== curl exit code: $CURL_EXIT ==="
-          echo "=== Full response/error ==="
-          echo "$RESPONSE"
-          echo "=== End of response ==="
-          
-          if [ $CURL_EXIT -ne 0 ]; then
-            echo "ERROR: curl failed with exit code $CURL_EXIT"
-            exit $CURL_EXIT
-          fi
-          
-          # Проверяем ответ
-          if echo "$RESPONSE" | grep -q '"count": 0'; then
-            echo "No products to send"
-            exit 0
-          fi
-          
-          echo "Found products, sending to Telegram..."
-          
-          # Отправляем в Telegram
-          curl -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
-            -d "chat_id=${CHANNEL_ID}" \
-            -d "text=✅ Товары найдены! Отправляю..." \
-            --max-time 10
-          
-          echo "=== Done ==="
+            --max-time 10 || true
